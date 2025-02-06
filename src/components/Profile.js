@@ -83,7 +83,7 @@ const Profile = () => {
             />
 
             <Center mb="6">
-                <Image src="/martxSlogan.png" alt="Logo" height="70px" /> {/* Logo at the top */}
+                <Image src="/logo.jpg" alt="Logo" height="70px" /> {/* Logo at the top */}
             </Center>
             <Heading as="h2" size="lg" textAlign="center" mb="6" color="#0A0E27">
                 User Profile

@@ -29,10 +29,11 @@ const SearchBar = () => {
                         h="1.75rem"
                         size="sm"
                         onClick={handleSearch}
-                        bg={'#F47D31'}
+                        bg={'#0A0E27'}
                         color="white"
-                        _hover={{ bg: '#0A0E27' }}
+                        _hover={{ bg: '#F47D31' }}
                     >
+                        
                         <SearchIcon />
                     </Button>
                 </InputRightElement>

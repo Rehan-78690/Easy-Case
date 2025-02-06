@@ -98,13 +98,13 @@ const BuyerSidebar = () => {
               <Collapse in={isCategoriesOpen}>
                 <VStack align="start" pl={4}>
                   <Text _hover={{ color: '#F47D31' }} cursor="pointer" w="full" py={1}>
-                    Electronics
+                  Transmission
                   </Text>
                   <Text _hover={{ color: '#F47D31' }} cursor="pointer" w="full" py={1}>
-                    Fashion
+                    Suspension
                   </Text>
                   <Text _hover={{ color: '#F47D31' }} cursor="pointer" w="full" py={1}>
-                    Home Appliances
+                    Body Parts
                   </Text>
                   <HStack
                     onClick={toggleSeeAll}
@@ -119,10 +119,19 @@ const BuyerSidebar = () => {
                   <Collapse in={isSeeAllOpen}>
                     <VStack align="start" pl={4}>
                       <Text _hover={{ color: '#F47D31' }} cursor="pointer" w="full" py={1}>
-                        Beauty
+                        Tires & Wheels
                       </Text>
                       <Text _hover={{ color: '#F47D31' }} cursor="pointer" w="full" py={1}>
-                        Sports
+                        Air FIlters
+                      </Text>
+                      <Text _hover={{ color: '#F47D31' }} cursor="pointer" w="full" py={1}>
+                        Tools & Equipment
+                      </Text>
+                      <Text _hover={{ color: '#F47D31' }} cursor="pointer" w="full" py={1}>
+                        Interior Accessories
+                      </Text>
+                      <Text _hover={{ color: '#F47D31' }} cursor="pointer" w="full" py={1}>
+                        Steering & switches
                       </Text>
                     </VStack>
                   </Collapse>

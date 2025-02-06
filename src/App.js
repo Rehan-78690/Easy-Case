@@ -5,7 +5,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { ToastContainer } from 'react-toastify';  
+import { Box } from '@chakra-ui/react';
 import 'react-toastify/dist/ReactToastify.css'; 
+
 
 // Pages and Components
 import LoginPage from './pages/LoginPage';
@@ -28,6 +30,8 @@ import GuestOrderTracking from './components/GuestOrderTracking';
 import VendorProductsPage from './components/VendorProductsPage';
 import ProductListing from './components/ProductListing';
 import Profile from './components/Profile';
+import Wishlist from './components/Wishlist';
+import ForYouProducts from './components/ForYouProducts';
 
 // Seller Dashboard Components
 import SellerDashboard from './components/seller/SellerDashboard';
@@ -75,9 +79,34 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Elements stripe={stripePromise}>
+      <Box
+          minH="100vh"
+          position="relative"
+          bg="white" // Fallback background color
+          sx={{
+            backgroundImage: "url('/background.jpg')", // Correct image path
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            position: "relative", // Ensure it's positioned for pseudo-element
+            '&::after': {
+              content: '""',
+              position: "absolute",
+              top: "0",
+              left: "0",
+              right: "0",
+              bottom: "0",
+              backgroundColor: "rgba(0, 0, 0, 0.3)", // Opacity overlay effect
+              zIndex: "-1", // Make sure the overlay stays behind content
+            },
+          }}
+        >
+        
         <Router>
       
           <Routes>
+          <Route path="/foryou" element={<ForYouProducts/>}/>
+            <Route path="/wishlist" element={<Wishlist/>}/>
             <Route path="/sellersignup" element={<SellerSignup />} />
           <Route path="/profilepop" element={<ProfilePopover />} />
           <Route path="/auth" element={<AuthComponent />} />
@@ -126,6 +155,7 @@ function App() {
             <Route path="/sidebar" element={<Sidebar />} />
           </Routes>
         </Router>
+        </Box>
       </Elements>
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover />
     </QueryClientProvider>

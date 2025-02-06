@@ -80,7 +80,7 @@ const LoginForm = () => {
           >
             <Center mb={6}>
               <Box display="flex" alignItems="center" mb={{ base: 2, md: 0 }} >
-                <Image src="/martxSlogan.png" alt="Logo" height="70px" />
+                <Image src="/logo.jpg" alt="Logo" height="70px" />
               </Box>
             </Center>
             <Center>

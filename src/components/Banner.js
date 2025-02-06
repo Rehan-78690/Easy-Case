@@ -16,27 +16,27 @@ function Banner() {
         autoplaySpeed: 3000,
         pauseOnHover: true,
     };
-
     const slides = [
         {
-            image: "/banner-imgs/banner1.jpeg",
-            heading: "Summer Spectacular!",
-            text: "Up to 50% off on all beachwear. Dive into savings today!",
-            button: "Shop the Sale",
+            image: "/banner-imgs/banner1.jpg",
+            heading: "Revamp Your Ride!",
+            text: "Get up to 50% off on top-quality auto parts. Upgrade your car today!",
+            button: "Shop Now",
         },
         {
-            image: "/banner-imgs/banner2.jpeg",
-            heading: "Just In: Fresh Finds",
-            text: "Explore the latest trends in fashion and tech.",
-            button: "See What's New",
+            image: "/banner-imgs/banner2.jpg",
+            heading: "Expert Repair Services",
+            text: "From minor fixes to major repairs, trust our specialists to get your car running like new.",
+            button: "Book a Service",
         },
         {
-            image: "/banner-imgs/banner3.jpeg",
-            heading: "Mega Savings Event!",
-            text: "Exclusive deals on best-selling products. Limited time only!",
-            button: "Grab the Deals",
+            image: "/banner-imgs/banner3.jpg",
+            heading: "New & Used Parts Available",
+            text: "Find high-quality new and pre-owned auto parts at unbeatable prices.",
+            button: "Browse Inventory",
         },
     ];
+    
 
     return (
         <Box mt="0" pt="0"> {/* Removed margin and padding to align perfectly with the navbar */}
@@ -73,8 +73,8 @@ function Banner() {
                                 </Text>
                                 <Button
                                     size="lg"
-                                    colorScheme="orange"
-                                    bg="#F47D31"
+                                    colorScheme="black"
+                                    bg="#0A0E27"
                                     _hover={{ bg: "#e36625" }}
                                     borderRadius="full"
                                 >

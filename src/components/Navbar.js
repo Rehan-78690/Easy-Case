@@ -77,7 +77,7 @@ function Navbar() {
                 <BuyerSidebar />
                 {/* Logo */}
                 <Box display="flex" alignItems="center" mb={{ base: 2, md: 0 }} onClick={handleLogoClick} ml={'50px'}>
-                    <Image src="/martxxx.png" alt="Logo" height="40px" />
+                    <Image src="/logo.jpg" alt="Logo" height="40px" />
                 </Box>
 
                 {/* SearchBar Component */}
