@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter,
-    FormControl, FormLabel, Input, Button
+    FormControl, FormLabel, Input, Button, Grid, GridItem
 } from '@chakra-ui/react';
 
 const GuestCheckoutModal = ({ isModalOpen, onModalClose, guestInfo, setGuestInfo, handleGuestCheckout }) => {
@@ -9,51 +9,58 @@ const GuestCheckoutModal = ({ isModalOpen, onModalClose, guestInfo, setGuestInfo
         <Modal isOpen={isModalOpen} onClose={onModalClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Guest Checkout</ModalHeader>
+                <ModalHeader>Guest Checkout Information</ModalHeader>
                 <ModalBody>
-                    <FormControl isRequired>
-                        <FormLabel>Full Name</FormLabel>
-                        <Input
-                            value={guestInfo.name}
-                            onChange={(e) => setGuestInfo({ ...guestInfo, name: e.target.value })}
-                        />
-                    </FormControl>
-                    <FormControl isRequired mt={4}>
-                        <FormLabel>Email</FormLabel>
-                        <Input
-                            type="email"
-                            value={guestInfo.email}
-                            onChange={(e) => setGuestInfo({ ...guestInfo, email: e.target.value })}
-                        />
-                    </FormControl>
-                    <FormControl isRequired mt={4}>
-                        <FormLabel>Address</FormLabel>
-                        <Input
-                            value={guestInfo.address}
-                            onChange={(e) => setGuestInfo({ ...guestInfo, address: e.target.value })}
-                        />
-                    </FormControl>
-                    <FormControl isRequired mt={4}>
-                        <FormLabel>City</FormLabel>
-                        <Input
-                            value={guestInfo.city}
-                            onChange={(e) => setGuestInfo({ ...guestInfo, city: e.target.value })}
-                        />
-                    </FormControl>
-                    <FormControl isRequired mt={4}>
-                        <FormLabel>Country</FormLabel>
-                        <Input
-                            value={guestInfo.country}
-                            onChange={(e) => setGuestInfo({ ...guestInfo, country: e.target.value })}
-                        />
-                    </FormControl>
-                    <FormControl isRequired mt={4}>
-                        <FormLabel>Postal Code</FormLabel>
-                        <Input
-                            value={guestInfo.postal_code}
-                            onChange={(e) => setGuestInfo({ ...guestInfo, postal_code: e.target.value })}
-                        />
-                    </FormControl>
+                    <Grid templateColumns="150px 1fr" gap={4} alignItems="center">
+                        <GridItem><FormLabel>Full Name *</FormLabel></GridItem>
+                        <GridItem>
+                            <Input
+                                value={guestInfo.name}
+                                onChange={(e) => setGuestInfo({ ...guestInfo, name: e.target.value })}
+                            />
+                        </GridItem>
+
+                        <GridItem><FormLabel>Email *</FormLabel></GridItem>
+                        <GridItem>
+                            <Input
+                                type="email"
+                                value={guestInfo.email}
+                                onChange={(e) => setGuestInfo({ ...guestInfo, email: e.target.value })}
+                            />
+                        </GridItem>
+
+                        <GridItem><FormLabel>Address *</FormLabel></GridItem>
+                        <GridItem>
+                            <Input
+                                value={guestInfo.address}
+                                onChange={(e) => setGuestInfo({ ...guestInfo, address: e.target.value })}
+                            />
+                        </GridItem>
+
+                        <GridItem><FormLabel>City *</FormLabel></GridItem>
+                        <GridItem>
+                            <Input
+                                value={guestInfo.city}
+                                onChange={(e) => setGuestInfo({ ...guestInfo, city: e.target.value })}
+                            />
+                        </GridItem>
+
+                        <GridItem><FormLabel>Country *</FormLabel></GridItem>
+                        <GridItem>
+                            <Input
+                                value={guestInfo.country}
+                                onChange={(e) => setGuestInfo({ ...guestInfo, country: e.target.value })}
+                            />
+                        </GridItem>
+
+                        <GridItem><FormLabel>Postal Code *</FormLabel></GridItem>
+                        <GridItem>
+                            <Input
+                                value={guestInfo.postal_code}
+                                onChange={(e) => setGuestInfo({ ...guestInfo, postal_code: e.target.value })}
+                            />
+                        </GridItem>
+                    </Grid>
                 </ModalBody>
 
                 <ModalFooter>

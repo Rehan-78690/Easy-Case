@@ -29,9 +29,9 @@ const SearchBar = () => {
                         h="1.75rem"
                         size="sm"
                         onClick={handleSearch}
-                        bg={'#0A0E27'}
+                        bg={'#ff9a00'}
                         color="white"
-                        _hover={{ bg: '#F47D31' }}
+                        _hover={{ bg: '#0A0E27' }}
                     >
                         
                         <SearchIcon />
