@@ -12,14 +12,15 @@ const Banner = () => {
     const settings = {
         dots: true,
         infinite: true,
-        speed: 1200,
+        speed: 800,
         slidesToShow: 1,
         slidesToScroll: 1,
         autoplay: true,
-        autoplaySpeed: 4500,
+        autoplaySpeed: 2000,
         fade: true,
         arrows: false,
     };
+    
 
     const slides = [
         {

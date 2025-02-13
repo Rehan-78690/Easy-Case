@@ -67,7 +67,7 @@ export const logoutService = async () => {
 export const signupService = async (userData) => {
     try {
         await axios.post(`${API_URL}/users/`, userData);
-        window.location.href = '/login';  // Redirect to login after successful signup
+        window.location.href = '/login';
     } catch (error) {
         throw new Error(error.response?.data?.detail || 'Signup failed');
     }

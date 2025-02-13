@@ -27,7 +27,7 @@ const LoginForm = () => {
       <InputGroup size="md">
         <Field
           as={Input}
-          pr="4.5rem" // Right padding to make space for the button
+          pr="4.5rem"
           name="password"
           type={show ? 'text' : 'password'}
           placeholder="Password"
