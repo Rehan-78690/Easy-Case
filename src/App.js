@@ -34,18 +34,9 @@ import Wishlist from './components/Wishlist';
 import ForYouProducts from './components/ForYouProducts';
 
 // Seller Dashboard Components
-import SellerDashboard from './components/seller/SellerDashboard';
-import Sidebar from './components/seller/Sidebar';
-import ManageInventory from './components/seller/ManageInventory';
-import Earnings from './components/seller/Earnings';
-import DailySalesLineChart from './components/seller/DailySalesLineChart';
-import Header from './components/seller/Header';
-import MonthlyStatsBarChart from './components/seller/MonthlyStatsBarChart';
 import VendorOrders from './components/seller/VendorOrders';
 import MainSellerPage from './components/seller/MainSellerPage';
 import AuthComponent from './components/AuthComponent';
-import ProfilePreview from './components/ProfilePopover';
-import ProfileModal from './components/ProfilePopover';
 import ProductSearchPage from './pages/ProductSearchPage';
 import VendorListingPage from './pages/VendorListingPage';
 import VendorSales from './components/seller/VendorSales'
@@ -134,24 +125,7 @@ function App() {
             <Route path="/vendor-orders" element={<VendorOrders/>} />
             <Route path="/vendors" element={<VendorListingPage/>} />
             <Route path="/vendorsales" element={<VendorSales />} />
-
-            {/*sidebar router component*/}
-            {/* <Router>
-              <Sidebar>
-                <Routes>
-                  <Route path="/vendorsales" element={<VendorSales />} />
-                  <Route path="/manage-inventory" element={<ManageInventory />} />
-                  <Route path="/earnings" element={<Earnings />} />
-                  <Route path="/vendor-orders" element={<VendorOrders />} />
-                </Routes>
-              </Sidebar>
-            </Router> */}
-            {/* Seller Dashboard Routes */}
             <Route path="/MainSellerPage" element={<MainSellerPage />} />
-            <Route path="/MainSellerPage" element={<SellerDashboard />} />
-            <Route path="/manage-inventory" element={<ManageInventory />} />
-            <Route path="/earnings" element={<Earnings />} />
-            <Route path="/sidebar" element={<Sidebar />} />
           </Routes>
         </Router>
         </Box>

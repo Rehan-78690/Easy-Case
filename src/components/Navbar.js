@@ -70,10 +70,6 @@ function Navbar() {
     const handleLogoClick = () => {
         navigate('/');
     };
-
-    const handleSellerSignUp = () => {
-        navigate('/sellersignup');
-    };
     return (
         <Box boxShadow='md' as="nav" bg="#FFFFFF" p={4} borderBottom="4px" borderColor="#0A0E27" mb={0}>
             <Flex align="center" justify="space-between" maxW="1200px" mx="auto" flexWrap="wrap">
@@ -90,16 +86,6 @@ function Navbar() {
 
                 {/* Cart & Profile Icons */}
                 <Flex align="center">
-                    <Button
-                      backgroundColor="black"
-                      width="100px"
-                      textColor="white"
-                      borderRadius="4px"
-                      fontSize='18px'
-                      onClick={handleSellerSignUp}
-                    >
-                      Seller
-                    </Button>
                     {/* Profile Icon */}
                     <IconButton
                         ref={profileButtonRef}

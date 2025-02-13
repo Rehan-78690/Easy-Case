@@ -6,7 +6,6 @@ const LogoutButton = () => {
     const handleLogout = async () => {
         try {
             await logoutService();
-            // Optionally show a success message or handle UI changes
         } catch (error) {
             console.error('Logout failed:', error.message);
         }

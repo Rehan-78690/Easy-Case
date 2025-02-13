@@ -30,7 +30,7 @@ const SellerDashboard = () => {
   };
 
   const handleSwitchToBuyer = () => {
-    navigate('/dashboard');
+    navigate('/');
   };
 
   const handleOrdersClick = () => {
