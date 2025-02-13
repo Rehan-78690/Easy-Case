@@ -7,7 +7,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { ToastContainer } from 'react-toastify';  
 import { Box } from '@chakra-ui/react';
 import 'react-toastify/dist/ReactToastify.css'; 
-
+import './App.css';
 
 // Pages and Components
 import LoginPage from './pages/LoginPage';
@@ -82,13 +82,14 @@ function App() {
       <Box
           minH="100vh"
           position="relative"
-          bg="white" // Fallback background color
+          bg="white"
           sx={{
-            backgroundImage: "url('/background.jpg')", // Correct image path
+            // backgroundImage: "url('/background.jpg')",
+            backgroundColor:"white",
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
-            position: "relative", // Ensure it's positioned for pseudo-element
+            position: "relative",
             '&::after': {
               content: '""',
               position: "absolute",
@@ -96,24 +97,23 @@ function App() {
               left: "0",
               right: "0",
               bottom: "0",
-              backgroundColor: "rgba(0, 0, 0, 0.3)", // Opacity overlay effect
-              zIndex: "-1", // Make sure the overlay stays behind content
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
+              zIndex: "-1",
             },
           }}
         >
         
         <Router>
-      
           <Routes>
-          <Route path="/foryou" element={<ForYouProducts/>}/>
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/foryou" element={<ForYouProducts/>}/>
             <Route path="/wishlist" element={<Wishlist/>}/>
             <Route path="/sellersignup" element={<SellerSignup />} />
-          <Route path="/profilepop" element={<ProfilePopover />} />
-          <Route path="/auth" element={<AuthComponent />} />
+            <Route path="/profilepop" element={<ProfilePopover />} />
+            <Route path="/auth" element={<AuthComponent />} />
             <Route path="/products" element={<ProductSearchPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/product/:id" element={<ProductPage />} />
             <Route path="/checkout/:orderId" element={<CheckoutPage />} />
             <Route path="/checkout/" element={<CheckoutPage />} />
@@ -134,7 +134,6 @@ function App() {
             <Route path="/vendor-orders" element={<VendorOrders/>} />
             <Route path="/vendors" element={<VendorListingPage/>} />
             <Route path="/vendorsales" element={<VendorSales />} />
-            
 
             {/*sidebar router component*/}
             {/* <Router>
@@ -146,7 +145,7 @@ function App() {
                   <Route path="/vendor-orders" element={<VendorOrders />} />
                 </Routes>
               </Sidebar>
-    </Router> */}
+            </Router> */}
             {/* Seller Dashboard Routes */}
             <Route path="/MainSellerPage" element={<MainSellerPage />} />
             <Route path="/MainSellerPage" element={<SellerDashboard />} />

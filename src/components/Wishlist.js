@@ -4,8 +4,8 @@ import { FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useCart } from '../hooks/useCart'; // Custom hook for cart operations
-import useCartStore from '../stores/cartStore'; // Zustand store for cart state
+import { useCart } from '../hooks/useCart';
+import useCartStore from '../stores/cartStore';
 import LikeProduct from './LikeProduct';
 
 function Wishlist() {
@@ -13,14 +13,13 @@ function Wishlist() {
     const [loading, setLoading] = React.useState(true);
     const [error, setError] = React.useState(null);
 
-    const { addToCartMutation } = useCart(); // Cart operations
+    const { addToCartMutation } = useCart();
     const navigate = useNavigate(); // For navigation
-    const cartItems = useCartStore((state) => state.cartItems); // Current cart items
+    const cartItems = useCartStore((state) => state.cartItems);
 
     // Fetch recommended products
     React.useEffect(() => {
         const fetchRecommendedProducts = async () => {
-            // Retrieve the access token from localStorage
             const token = localStorage.getItem('accessToken'); 
     
             if (!token) {
@@ -39,7 +38,6 @@ function Wishlist() {
     
                 setRecommendedProducts(data || []);
             } catch (err) {
-                // Handle error if the request fails
                 setError(err.response?.data?.detail || 'Failed to load recommended products. Please try again.');
             } finally {
                 setLoading(false);

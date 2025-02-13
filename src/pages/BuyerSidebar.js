@@ -62,7 +62,7 @@ const BuyerSidebar = () => {
           <DrawerBody>
             <VStack align="start" spacing={3}>
               {/* Home Option */}
-              <HStack _hover={{ color: '#F47D31' }} cursor="pointer" w="full" py={2} onClick={() => navigate('/dashboard')}>
+              <HStack _hover={{ color: '#F47D31' }} cursor="pointer" w="full" py={2} onClick={() => navigate('/')}>
                 <AiOutlineHome />
                 <Text>Home</Text>
               </HStack>

@@ -51,8 +51,6 @@ const ProfilePopover = ({ isOpen, onClose, profileButtonRef }) => {
       duration: 3000,
       isClosable: true,
     });
-
-    // Redirect to auth page
     navigate('/auth');
   };
 

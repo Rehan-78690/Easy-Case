@@ -27,11 +27,10 @@ const DashboardPage = () => {
             <FeaturedCategories />
             <ProductListing />
             <PromotionalBanner />
-            {/* <Testimonials /> */}
+            <Testimonials />
             <VendorCard />
-          
             <NewsletterSignup />
-            <ProductListing />
+            {/* <ProductListing /> */}
             <Footer />
         </>
     );

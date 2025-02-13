@@ -77,7 +77,7 @@ const Profile = () => {
                 top="20px" // Adjusted spacing from top
                 left="20px" // Adjusted spacing from left
                 color="#0A0E27" // Blue color for the icon
-                onClick={() => navigate('/dashboard')} // Navigate to the dashboard
+                onClick={() => navigate('/')} // Navigate to the dashboard
                 aria-label="Go back to Dashboard"
                 borderColor="#0A0E27"
             />

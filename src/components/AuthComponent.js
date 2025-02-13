@@ -1,26 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
-  Box, Button, Flex, Text, Heading, VStack, IconButton, useColorModeValue
-} from '@chakra-ui/react';
-import { ArrowBackIcon } from '@chakra-ui/icons';
-import LoginForm from './LoginForm';
-import SignupForm from './SignupForm';
-import { useNavigate } from 'react-router-dom';
-import useUserStore from '../stores/userStore'; 
-import ProfilePreview from './ProfilePopover';
+  Box,
+  Button,
+  Flex,
+  Text,
+  Heading,
+  VStack,
+  Input,
+  FormControl,
+  FormLabel,
+  Divider,
+  Icon,
+  IconButton,
+} from "@chakra-ui/react";
+import { FcGoogle } from "react-icons/fc";
+import { ArrowBackIcon } from "@chakra-ui/icons";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
+import useUserStore from "../stores/userStore";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
-const AuthComponent = ({ onLoginSubmit, onSignupSubmit, error }) => {
-  const [isLogin, setIsLogin] = useState(true); 
+const AuthComponent = ({ onLoginSubmit, onSignupSubmit }) => {
+  const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(true);
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const messageBg = '#0A0E27'; 
+  const [loginData, setLoginData] = useState({ identifier: "", password: "" });
+  const [signupData, setSignupData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+  });
+
   const { user, fetchUser } = useUserStore();
   const navigate = useNavigate();
-  const animationDuration = 0.7;
-  const Dblue = '#0A0E27'; 
+  const toast = useToast();
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem("authToken");
     if (token) {
       fetchUser(token);
     }
@@ -32,7 +49,11 @@ const AuthComponent = ({ onLoginSubmit, onSignupSubmit, error }) => {
   }
 
   if (user) {
-    return <ProfilePreview user={user} />;
+    return (
+      <Box p={8} textAlign="center">
+        <Heading size="lg">Welcome, {user.name}!</Heading>
+      </Box>
+    );
   }
 
   return (
@@ -40,96 +61,178 @@ const AuthComponent = ({ onLoginSubmit, onSignupSubmit, error }) => {
       h="100vh"
       align="center"
       justify="center"
-      bg={bgColor}
+      w="100%"
       position="relative"
+      bgGradient="linear(to-r, #667eea, #764ba2)"
       overflow="hidden"
     >
-      {/* Form Side - Sliding from left to right */}
+      {/* Background with Glassmorphism Effect */}
       <Box
         position="absolute"
-        top={0}
-        bottom={0}
-        left={isLogin ? '0' : '50%'}
-        right={isLogin ? '50%' : '0'}
-        bg={bgColor}
-        zIndex={0}
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        transition={`all ${animationDuration}s ease`}
-      >
-        {/* Login Form */}
-        <Box
-          w="50%"
-          p={8}
-          borderRadius={8}
-          display={isLogin ? 'block' : 'none'}
-        >
-          <LoginForm onSubmit={onLoginSubmit} error={error} />
-        </Box>
-
-        {/* Signup Form */}
-        <Box
-          w="50%"
-          p={8}
-          borderRadius={8}
-          display={!isLogin ? 'block' : 'none'}
-        >
-          <SignupForm onSubmit={onSignupSubmit} error={error} />
-        </Box>
-      </Box>
-
-      {/* Message Side - Sliding from right to left */}
-      <Box
-        position="absolute"
-        top={0}
-        bottom={0}
-        left={isLogin ? '50%' : '0'}
-        right={isLogin ? '0' : '50%'}
-        bg={messageBg}
-        zIndex={1}
-        color="white"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        transition={`all ${animationDuration}s ease`}
-      >
-        <VStack spacing={4} textAlign="center">
-          <Heading mb={4} fontSize="3xl">
-            {isLogin ? 'Hello, New User!' : 'Welcome Back!'}
-          </Heading>
-          <Text fontSize="lg">
-            {isLogin
-              ? "Don't have an account? Click below to sign up!"
-              : 'Already have an account? Log in now!'}
-          </Text>
-          <Button
-            size="lg"
-            variant="outline"
-            borderColor="#F47D31"
-            color="#F47D31"
-            borderRadius="full"
-            onClick={() => setIsLogin(!isLogin)}
-            _hover={{ bg: '#F47D31', color: 'white' }}
-          >
-            {isLogin ? 'Sign Up' : 'Log In'}
-          </Button>
-        </VStack>
-      </Box>
+        top="0"
+        left="0"
+        w="100%"
+        h="100%"
+        bgImage="url('https://source.unsplash.com/1600x900/?technology,abstract')"
+        bgSize="cover"
+        bgPosition="center"
+        opacity="0.2"
+        zIndex="-1"
+      />
 
       {/* Back Button */}
-     
       <IconButton
-    icon={<ArrowBackIcon />}
-    position="absolute"
-    top="20px" // Adjusted spacing from top
-    left="20px" // Adjusted spacing from left
-    backgroundColor={isLogin ? '#0A0E27' : '#F47D31'} // Background color based on current screen
-    onClick={() => navigate('/dashboard')} // Navigate back to a previous page or home
-    color="white" // Text color remains white
-    zIndex={2} // Ensure it stays on top of the sliding elements
-/>
+        icon={<ArrowBackIcon />}
+        position="absolute"
+        top="20px"
+        left="20px"
+        color="white"
+        fontSize="24px"
+        variant="ghost"
+        onClick={() => navigate("/")}
+        _hover={{ bg: "rgba(255, 255, 255, 0.2)" }}
+      />
 
+      {/* Card Container */}
+      <Flex
+        direction="column"
+        w={{ base: "90%", sm: "80%", md: "60%", lg: "40%" }}
+        bg="rgba(255, 255, 255, 0.15)"
+        backdropFilter="blur(10px)"
+        borderRadius="lg"
+        boxShadow="xl"
+        p={8}
+        align="center"
+      >
+        <Heading
+          size="lg"
+          color="white"
+          textAlign="center"
+          mb={6}
+          fontWeight="bold"
+        >
+          {isLogin ? "Welcome Back" : "Create an Account"}
+        </Heading>
+
+        {/* Google Sign-In Button */}
+        <Button
+          leftIcon={<FcGoogle />}
+          w="full"
+          onClick={() => toast({
+            title: "Google Sign-In",
+            description: "Google Sign-In functionality will be integrated here.",
+            status: "info",
+            duration: 3000,
+            isClosable: true,
+          })}
+          bg="white"
+          color="gray.700"
+          _hover={{ bg: "gray.100" }}
+          mb={4}
+        >
+          Sign in with Google
+        </Button>
+
+        <Divider />
+
+        {/* Authentication Form */}
+        <VStack spacing={4} width="100%" mt={4}>
+          {!isLogin && (
+            <FormControl>
+              <FormLabel color="white">Full Name</FormLabel>
+              <Input
+                type="text"
+                placeholder="Enter your name"
+                value={signupData.name}
+                onChange={(e) =>
+                  setSignupData({ ...signupData, name: e.target.value })
+                }
+                bg="rgba(255,255,255,0.2)"
+                border="none"
+                color="white"
+                _placeholder={{ color: "gray.300" }}
+              />
+            </FormControl>
+          )}
+
+          <FormControl>
+            <FormLabel color="white">{isLogin ? "Email or Phone" : "Email"}</FormLabel>
+            <Input
+              type="email"
+              placeholder="Enter your email"
+              value={isLogin ? loginData.identifier : signupData.email}
+              onChange={(e) =>
+                isLogin
+                  ? setLoginData({ ...loginData, identifier: e.target.value })
+                  : setSignupData({ ...signupData, email: e.target.value })
+              }
+              bg="rgba(255,255,255,0.2)"
+              border="none"
+              color="white"
+              _placeholder={{ color: "gray.300" }}
+            />
+          </FormControl>
+
+          {!isLogin && (
+            <FormControl>
+              <FormLabel color="white">Phone Number</FormLabel>
+              <PhoneInput
+                country={"us"}
+                value={signupData.phone}
+                onChange={(phone) => setSignupData({ ...signupData, phone })}
+                inputStyle={{
+                  width: "100%",
+                  background: "rgba(255,255,255,0.2)",
+                  color: "white",
+                  border: "none",
+                }}
+                dropdownStyle={{
+                  background: "rgba(255,255,255,0.2)",
+                }}
+              />
+            </FormControl>
+          )}
+
+          <FormControl>
+            <FormLabel color="white">Password</FormLabel>
+            <Input
+              type="password"
+              placeholder="Enter password"
+              value={isLogin ? loginData.password : signupData.password}
+              onChange={(e) =>
+                isLogin
+                  ? setLoginData({ ...loginData, password: e.target.value })
+                  : setSignupData({ ...signupData, password: e.target.value })
+              }
+              bg="rgba(255,255,255,0.2)"
+              border="none"
+              color="white"
+              _placeholder={{ color: "gray.300" }}
+            />
+          </FormControl>
+
+          <Button
+            w="full"
+            mt={4}
+            colorScheme="blue"
+            onClick={() => (isLogin ? onLoginSubmit(loginData) : onSignupSubmit(signupData))}
+          >
+            {isLogin ? "Login" : "Sign Up"}
+          </Button>
+        </VStack>
+
+        <Text mt={4} fontSize="sm" color="white">
+          {isLogin ? "Don't have an account?" : "Already have an account?"}
+          <Button
+            variant="link"
+            colorScheme="white"
+            ml={1}
+            onClick={() => setIsLogin(!isLogin)}
+          >
+            {isLogin ? "Sign Up" : "Login"}
+          </Button>
+        </Text>
+      </Flex>
     </Flex>
   );
 };

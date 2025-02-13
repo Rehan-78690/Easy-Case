@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Box, Badge, Flex, IconButton, Image, useDisclosure, useToast } from '@chakra-ui/react';
+import {Box, Badge, Flex, IconButton, Image, useDisclosure, useToast, Button} from '@chakra-ui/react';
 import { FaShoppingCart, FaUser } from 'react-icons/fa'; // Import icons
 import { useNavigate } from 'react-router-dom';
 import { useCheckout } from '../hooks/useCheckout';
@@ -68,9 +68,12 @@ function Navbar() {
 
     // Navigate to home on logo click
     const handleLogoClick = () => {
-        navigate('/dashboard');
+        navigate('/');
     };
 
+    const handleSellerSignUp = () => {
+        navigate('/sellersignup');
+    };
     return (
         <Box boxShadow='md' as="nav" bg="#FFFFFF" p={4} borderBottom="4px" borderColor="#0A0E27" mb={0}>
             <Flex align="center" justify="space-between" maxW="1200px" mx="auto" flexWrap="wrap">
@@ -87,15 +90,25 @@ function Navbar() {
 
                 {/* Cart & Profile Icons */}
                 <Flex align="center">
+                    <Button
+                      backgroundColor="black"
+                      width="100px"
+                      textColor="white"
+                      borderRadius="4px"
+                      fontSize='18px'
+                      onClick={handleSellerSignUp}
+                    >
+                      Seller
+                    </Button>
                     {/* Profile Icon */}
                     <IconButton
-                        ref={profileButtonRef} // Set the ref here
+                        ref={profileButtonRef}
                         icon={<FaUser />}
                         aria-label="Profile"
                         variant="ghost"
                         size="lg"
                         color="#0A0E27"
-                        onClick={handleProfileClick} // Conditionally navigate based on login status
+                        onClick={handleProfileClick}
                         ml={4}
                     />
                     {/* Profile Popover */}
@@ -115,7 +128,7 @@ function Navbar() {
                             variant="ghost"
                             size="lg"
                             color="#0A0E27"
-                            onClick={onOpen} // Opens the cart drawer
+                            onClick={onOpen}
                             position="relative"
                         />
                         {cartItems.length > 0 && (

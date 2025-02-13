@@ -1,21 +1,26 @@
-import React from 'react';
-import Slider from 'react-slick';
-import { Box, Heading, Text, Button } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
+import React from "react";
+import Slider from "react-slick";
+import { Box, Heading, Text, Button } from "@chakra-ui/react";
+import { motion } from "framer-motion";
 
-function Banner() {
-    const MotionBox = motion(Box);
+const MotionBox = motion(Box);
+const MotionHeading = motion(Heading);
+const MotionText = motion(Text);
+const MotionButton = motion(Button);
 
+const Banner = () => {
     const settings = {
         dots: true,
         infinite: true,
-        speed: 500,
+        speed: 1200,
         slidesToShow: 1,
         slidesToScroll: 1,
         autoplay: true,
-        autoplaySpeed: 3000,
-        pauseOnHover: true,
+        autoplaySpeed: 4500,
+        fade: true,
+        arrows: false,
     };
+
     const slides = [
         {
             image: "/banner-imgs/banner1.jpg",
@@ -36,50 +41,80 @@ function Banner() {
             button: "Browse Inventory",
         },
     ];
-    
 
     return (
-        <Box mt="0" pt="0"> {/* Removed margin and padding to align perfectly with the navbar */}
+        <Box position="relative" w="100%" overflow="hidden">
             <Slider {...settings}>
                 {slides.map((slide, index) => (
-                    <Box key={index}>
+                    <Box key={index} position="relative">
+                        {/* Background Image */}
                         <Box
                             as="section"
                             bgImage={`url(${slide.image})`}
                             bgSize="cover"
                             bgPosition="center"
-                            height={{ base: "300px", md: "500px" }}
+                            height={{ base: "500px", md: "600px", lg: "750px" }}
                             display="flex"
                             alignItems="center"
                             justifyContent="center"
                             flexDirection="column"
                             position="relative"
-                            color="white"
+                            textAlign="center"
                         >
+                            {/* Gradient Overlay */}
+                            <Box
+                                position="absolute"
+                                top="0"
+                                left="0"
+                                w="100%"
+                                h="100%"
+                                bgGradient="linear(to-b, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.2))"
+                            />
+
+                            {/* Animated Text Content */}
                             <MotionBox
-                                initial={{ opacity: 0, y: 50 }}
+                                initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 1 }}
-                                bg="rgba(0, 0, 0, 0.5)"
-                                p={4}
+                                zIndex="1"
                                 textAlign="center"
-                                borderRadius="md"
+                                p={{ base: 4, md: 8 }}
+                                maxW="80%"
                             >
-                                <Heading as="h1" size="2xl" mb={4}>
+                                <MotionHeading
+                                    as="h1"
+                                    size={{ base: "xl", md: "3xl", lg: "4xl" }}
+                                    color="white"
+                                    mb={3}
+                                    fontWeight="bold"
+                                    transition={{ duration: 1.2, delay: 0.2 }}
+                                >
                                     {slide.heading}
-                                </Heading>
-                                <Text fontSize="lg" mb={6}>
+                                </MotionHeading>
+
+                                <MotionText
+                                    fontSize={{ base: "md", md: "lg", lg: "xl" }}
+                                    color="gray.300"
+                                    mb={6}
+                                    transition={{ duration: 1.2, delay: 0.4 }}
+                                >
                                     {slide.text}
-                                </Text>
-                                <Button
+                                </MotionText>
+
+                                <MotionButton
                                     size="lg"
-                                    colorScheme="black"
-                                    bg="#0A0E27"
-                                    _hover={{ bg: "#e36625" }}
+                                    px={8}
+                                    py={6}
+                                    fontSize="lg"
+                                    fontWeight="bold"
+                                    colorScheme="orange"
+                                    bg="orange.500"
+                                    _hover={{ bg: "orange.600", transform: "scale(1.05)" }}
+                                    transition="all 0.3s ease"
                                     borderRadius="full"
                                 >
                                     {slide.button}
-                                </Button>
+                                </MotionButton>
                             </MotionBox>
                         </Box>
                     </Box>
@@ -87,6 +122,6 @@ function Banner() {
             </Slider>
         </Box>
     );
-}
+};
 
 export default Banner;

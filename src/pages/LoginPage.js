@@ -6,7 +6,7 @@ const LoginPage = () => {
     const { login, error, loading } = useLogin();
 
     const handleLogin = async (formData) => {
-        await login(formData); // Call the login function from the hook
+        await login(formData);
     };
 
     return (
