@@ -7,6 +7,8 @@ import ManageInventory from "./ManageInventory";
 import ProductListing from "../FeatureProducts";
 import Ordersdetails from "./VendorOrders";
 import VendorSales from "./VendorSales";
+import ReviewCard from './../ReviewCard'
+import VendorProductsPieChart from "./ProductPieChart";
 const MainSellerPage = () => {
   const [selectedSection, setSelectedSection] = useState("home");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -14,6 +16,13 @@ const MainSellerPage = () => {
   const handleSelect = (section) => {
     setSelectedSection(section);
   };
+
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+    
+      const handleLogout = () => {
+        console.log("User logged out");
+        setIsLogoutOpen(false);
+      };
 
   return (
     <Flex height="100vh" overflow="hidden">
@@ -35,10 +44,9 @@ const MainSellerPage = () => {
         {selectedSection === "services" && <ProductListing />}
         {selectedSection === "orders" && <Ordersdetails/>}
         {selectedSection === "analytics" && <VendorSales />}
-        {selectedSection === "home" && <SellerDashboard />}
-        {selectedSection === "home" && <SellerDashboard />}
-        {selectedSection === "home" && <SellerDashboard />}
-        {selectedSection === "home" && <SellerDashboard />}
+        {selectedSection === "reviews" && <ReviewCard/>}
+        {selectedSection === "report" && <VendorProductsPieChart/>}
+        {selectedSection === "settings" && <ReviewCard/>}
       </Box>
     </Flex>
   );

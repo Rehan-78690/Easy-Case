@@ -1,6 +1,11 @@
 import React, { useState } from "react";
-import { Box, Text, VStack, IconButton, Flex } from "@chakra-ui/react";
-import { FaBars, FaTimes, FaHome, FaProjectDiagram, FaUserAlt, FaUsers, FaChartLine, FaFileAlt, FaCog, FaBoxOpen, FaStar, FaSignOutAlt } from "react-icons/fa";
+import { Box, Text, VStack, IconButton, Flex, Icon } from "@chakra-ui/react";
+import {FaBars,FaTimes,FaHome,FaProjectDiagram,FaUserAlt,FaUsers,FaChartLine,FaFileAlt,FaCog,FaBoxOpen,FaStar,FaSignOutAlt,
+} from "react-icons/fa";
+import { Button } from "@chakra-ui/react";
+import {useNavigate} from 'react-router-dom';
+import LogoutModal from'./../Modals/LogoutModal';
+
 
 const navitems = [
   { text: "Home", icon: FaHome, link: "home" },
@@ -12,16 +17,22 @@ const navitems = [
   { text: "Reports", icon: FaFileAlt, link: "report" },
   { text: "Setting", icon: FaCog, link: "settings" },
   { text: "Reviews", icon: FaStar, link: "reviews" },
-  { text: "Logout", icon: FaSignOutAlt, link: "logout" },
 ];
 
-const SellerSidebar = ({  onselect, isOpen, setIsOpen }) => {
+const SellerSidebar = ({ onselect, isOpen, setIsOpen }) => {
   const [activeItem, setActiveItem] = useState("home");
   // const [isOpen, setIsOpen] = useState(true);
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleClick = (link) => {
     setActiveItem(link);
     onselect(link);
+  };
+
+  const handleLogout = () => {
+    navigate('/')
+    setIsLogoutOpen(false);
   };
 
   return (
@@ -38,6 +49,14 @@ const SellerSidebar = ({  onselect, isOpen, setIsOpen }) => {
       display="flex"
       flexDirection="column"
       justifyContent="space-between"
+      overflow="auto"
+      maxH="100vh"
+      css={{
+        scrollbarWidth: "none",
+        "&::-webkit-scrollbar": {
+          display: "none",
+        },
+      }}
     >
       {/* Toggle Button */}
       <Flex justifyContent={isOpen ? "flex-end" : "center"}>
@@ -86,7 +105,16 @@ const SellerSidebar = ({  onselect, isOpen, setIsOpen }) => {
             {isOpen && <Text fontSize="md">{item.text}</Text>}
           </Flex>
         ))}
+        <Button colorScheme="red" onClick={() => setIsLogoutOpen(true)}>
+          Logout
+        </Button>
       </VStack>
+
+      <LogoutModal 
+        isOpen={isLogoutOpen} 
+        onClose={() => setIsLogoutOpen(false)} 
+        onLogout={handleLogout} 
+      />
     </Box>
   );
 };

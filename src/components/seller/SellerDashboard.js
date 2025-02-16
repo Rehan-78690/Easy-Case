@@ -13,6 +13,7 @@ const SellerDashboard = () => {
   const { orders, fetchVendorOrders } = useVendorOrderStore(); // Get orders from the store
   const [totalSales, setTotalSales] = useState(0); // State to store total sales
 
+
   useEffect(() => {
     if (orders.length === 0) {
       fetchVendorOrders(); // Fetch orders if not already fetched

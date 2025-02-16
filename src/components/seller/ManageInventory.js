@@ -7,7 +7,7 @@ import {
 
 import { AddIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import { getProducts, createProduct, deleteProduct, updateProduct, addTagToProduct } from '../../services/productService';
-import AddProductModal from './AddProductModal'; 
+import AddProductModal from './../Modals/AddProductModal'; 
 import { useNavigate } from 'react-router-dom';
 import { ArrowBackIcon, SmallAddIcon } from '@chakra-ui/icons';
 
