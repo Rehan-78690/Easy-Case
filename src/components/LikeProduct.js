@@ -86,7 +86,6 @@ function LikeProduct({ productId }) {
                 setLiked(isLiked);
             } catch (error) {
                 console.error('Failed to fetch liked status:', error);
-                toast.error('Unable to load wishlist. Please try again later.');
             }
         };
 

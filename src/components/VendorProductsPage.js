@@ -8,9 +8,7 @@ const VendorProductsPage = () => {
     return (
         <>
             <Navbar />
-
             <ProductListing vendorId={vendorId} />
-
             <Footer />
         </>
     );  // Pass vendorId to ProductListing

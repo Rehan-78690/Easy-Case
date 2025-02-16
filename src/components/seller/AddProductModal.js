@@ -1,4 +1,3 @@
-// src/components/inventory/AddProductModal.js
 import React from 'react';
 import { 
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, 

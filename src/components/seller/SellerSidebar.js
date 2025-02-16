@@ -5,12 +5,12 @@ import { FaBars, FaTimes, FaHome, FaProjectDiagram, FaUserAlt, FaUsers, FaChartL
 const navitems = [
   { text: "Home", icon: FaHome, link: "home" },
   { text: "Earnings", icon: FaChartLine, link: "earnings" },
+  { text: "Inventory", icon: FaBoxOpen, link: "manage-inventory" },
   { text: "Service", icon: FaUserAlt, link: "services" },
   { text: "Orders", icon: FaUsers, link: "orders" },
   { text: "Analytics", icon: FaProjectDiagram, link: "analytics" },
   { text: "Reports", icon: FaFileAlt, link: "report" },
   { text: "Setting", icon: FaCog, link: "settings" },
-  { text: "Inventory", icon: FaBoxOpen, link: "manage-inventory" },
   { text: "Reviews", icon: FaStar, link: "reviews" },
   { text: "Logout", icon: FaSignOutAlt, link: "logout" },
 ];

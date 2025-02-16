@@ -29,10 +29,9 @@ function Wishlist() {
             }
     
             try {
-                // Make the API request with Authorization header containing the access token
                 const { data } = await axios.get('http://127.0.0.1:8000/wishlist/', {
                     headers: {
-                        Authorization: `JWT ${token}`,  // Include the token in the request header
+                        Authorization: `JWT ${token}`,
                     },
                 });
     

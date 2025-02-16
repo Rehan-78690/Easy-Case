@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverCloseButton, PopoverBody, Button, IconButton, Box, Heading, Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
+import { 
+  Box, Heading, IconButton, Table, Thead, Tbody, Tr, Th, Td, Button, 
+  Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverCloseButton, 
+  PopoverBody, Input, useDisclosure, Flex 
+} from "@chakra-ui/react";
+
 import { AddIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import { getProducts, createProduct, deleteProduct, updateProduct, addTagToProduct } from '../../services/productService';
 import AddProductModal from './AddProductModal'; 
-import { useDisclosure } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowBackIcon, SmallAddIcon } from '@chakra-ui/icons';
 
@@ -169,128 +173,139 @@ const ManageInventory = () => {
 
   return (
     <Box 
-      p="20px" 
+      p={{ base: "15px", md: "30px" }} 
       bg="#0A0E23" 
       color="white" 
-      border="2px" 
-      boxShadow="md" 
-      mt="0px" 
-      borderRadius="lg"
+      borderRadius="xl"
+      boxShadow="lg"
+      maxW="1200px"
+      mx="auto"
+      mt="20px"
     >
-       <IconButton
-                aria-label="Back"
-                icon={<ArrowBackIcon />}
-                colorScheme="orange"
-                onClick={() => navigate('/MainSellerPage')} 
-                mb="4"
-            />
-      <Heading mb="20px" color="#F47D31">Manage Inventory</Heading>
+      {/* Back Button & Heading */}
+      <Flex align="center" mb="20px" justify="space-between">
+        <IconButton
+          aria-label="Back"
+          icon={<ArrowBackIcon />}
+          colorScheme="orange"
+          onClick={() => navigate('/MainSellerPage')} 
+        />
+        <Heading color="#F47D31" textAlign="center" flex="1">Manage Inventory</Heading>
+      </Flex>
 
       {/* Add Product Button */}
-      <Box display="flex" justifyContent="flex-end" mb="10px">
-        <IconButton 
-          icon={<AddIcon />} 
-          colorScheme="orange" 
-          onClick={onOpen} 
-          aria-label="Add new product" 
-        />
-      </Box>
+      <Flex justify="flex-end" mb="15px">
+        <Button 
+          leftIcon={<AddIcon />} 
+          colorScheme="orange"
+          size="md"
+          onClick={onOpen}
+        >
+          Add Product
+        </Button>
+      </Flex>
 
       {/* Inventory Table */}
-      <Table 
-        variant="simple" 
-        bg="white" 
-        color="black" 
-        borderRadius="lg" 
-        mb="20px" 
-        size="sm"
-      >
-        <Thead bg="#F47D31">
-          <Tr>
-            <Th color="white" px="10px" py="8px">Product Name</Th>
-            <Th color="white" px="10px" py="8px">Status</Th>
-            <Th color="white" px="10px" py="8px">Quantity</Th>
-            <Th color="white" px="10px" py="8px">Actions</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {inventoryItems.map(item => (
-            <Tr key={item.id}>
-              <Td px="10px" py="8px">{item?.title}</Td>
-              <Td px="10px" py="8px">{item.inventory > 0 ? 'In Stock' : 'Out of Stock'}</Td>
-              <Td px="10px" py="8px">{item.inventory}</Td>
-              <Td px="10px" py="8px">
-                <IconButton
-                  icon={<EditIcon />}
-                  backgroundColor="#0A0E23"
-                  _hover={{ backgroundColor: "#0F1333" }}
-                  color="white"
-                  mr="2"
-                  onClick={() => handleEditProduct(item)}
-                  aria-label="Edit Product"
-                />
-                <IconButton
-                  icon={<DeleteIcon />}
-                  backgroundColor="#F47D31"
-                  _hover={{ backgroundColor: "#FF8B4C" }}
-                  color="white"
-                  onClick={() => handleDeleteProduct(item.id)}
-                  aria-label="Delete Product"
-                />
-                {/* Add Tag Popover */}
-                <Popover>
-                  <PopoverTrigger>
-                    <IconButton
-                      icon={<SmallAddIcon />}
-                      aria-label="Add Tag"
-                      colorScheme="orange"
-                      size="sm"
-                    />
-                  </PopoverTrigger>
-                  <PopoverContent>
-                    <PopoverArrow />
-                    <PopoverCloseButton />
-                    <PopoverBody>
-                      <Input
-                        placeholder="Enter tag"
-                        value={tagInputs[item.id] || ''}
-                        onChange={(e) => handleTagInputChange(item.id, e.target.value)}
-                        size="sm"
-                        mb="2"
-                      />
-                      <Button
-                        onClick={() => handleAddTagProduct(item.id)}
+      <Box overflowX="auto" borderRadius="lg" boxShadow="md">
+        <Table 
+          variant="simple" 
+          bg="white" 
+          color="black" 
+          borderRadius="lg" 
+          size="md"
+        >
+          <Thead bg="#F47D31">
+            <Tr>
+              <Th color="white" px="10px" py="12px">Product Name</Th>
+              <Th color="white" px="10px" py="12px">Status</Th>
+              <Th color="white" px="10px" py="12px">Quantity</Th>
+              <Th color="white" px="10px" py="12px" textAlign="center">Actions</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {inventoryItems.map(item => (
+              <Tr key={item.id} _hover={{ bg: "#F9F9F9" }}>
+                <Td px="10px" py="12px">{item?.title}</Td>
+                <Td px="10px" py="12px" fontWeight="bold" color={item.inventory > 0 ? "green.500" : "red.500"}>
+                  {item.inventory > 0 ? 'In Stock' : 'Out of Stock'}
+                </Td>
+                <Td px="10px" py="12px">{item.inventory}</Td>
+                <Td px="10px" py="12px" textAlign="center">
+                  <IconButton
+                    icon={<EditIcon />}
+                    backgroundColor="blue.500"
+                    _hover={{ backgroundColor: "blue.600" }}
+                    color="white"
+                    mr="2"
+                    onClick={() => handleEditProduct(item)}
+                    aria-label="Edit Product"
+                  />
+                  <IconButton
+                    icon={<DeleteIcon />}
+                    backgroundColor="red.500"
+                    _hover={{ backgroundColor: "red.600" }}
+                    color="white"
+                    mr="2"
+                    onClick={() => handleDeleteProduct(item.id)}
+                    aria-label="Delete Product"
+                  />
+                  {/* Add Tag Popover */}
+                  <Popover>
+                    <PopoverTrigger>
+                      <IconButton
+                        icon={<SmallAddIcon />}
+                        aria-label="Add Tag"
                         colorScheme="orange"
                         size="sm"
-                      >
-                        Add Tag
-                      </Button>
-                    </PopoverBody>
-                  </PopoverContent>
-                </Popover>
-              </Td>
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
+                      />
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <PopoverArrow />
+                      <PopoverCloseButton />
+                      <PopoverBody>
+                        <Input
+                          placeholder="Enter tag"
+                          value={tagInputs[item.id] || ''}
+                          onChange={(e) => handleTagInputChange(item.id, e.target.value)}
+                          size="sm"
+                          mb="2"
+                        />
+                        <Button
+                          onClick={() => handleAddTagProduct(item.id)}
+                          colorScheme="orange"
+                          size="sm"
+                        >
+                          Add Tag
+                        </Button>
+                      </PopoverBody>
+                    </PopoverContent>
+                  </Popover>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Box>
 
       {/* Pagination Buttons */}
-      <Box display="flex" justifyContent="space-between" mt="20px">
+      <Flex justify="space-between" mt="20px">
         <Button
           onClick={handlePreviousPage}
-          disabled={!previousPage}
+          isDisabled={!previousPage}
           colorScheme="orange"
+          size="md"
         >
           Previous
         </Button>
         <Button
           onClick={handleNextPage}
-          disabled={!nextPage}
+          isDisabled={!nextPage}
           colorScheme="orange"
+          size="md"
         >
           Next
         </Button>
-      </Box>
+      </Flex>
 
       {/* Add or Update Product Modal */}
       <AddProductModal

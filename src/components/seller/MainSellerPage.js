@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Sidebar from "./Sidebar";
+import Sidebar from "./SellerSidebar";
 import SellerDashboard from "./SellerDashboard";
 import { Box, Flex } from "@chakra-ui/react";
 import Earnings from "./Earnings";

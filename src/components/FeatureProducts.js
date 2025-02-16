@@ -11,6 +11,8 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import LikeProduct from './LikeProduct';
 
+import ErrorImage from './../assets/images/ImageError.jpg'
+
 function ProductListing({ vendorId }) {
     const { data: products, isLoading, error } = useProducts();
     const { addToCartMutation } = useCart();
@@ -130,7 +132,15 @@ function ProductListing({ vendorId }) {
                                     />
                                 ) : (
                                     <Center height="100%">
-                                        <Text>No Image Available</Text>
+                                         <Image
+                                        src={ErrorImage}
+                                        alt={product.title}
+                                        width="100%"
+                                        height="100%"
+                                        objectFit="cover"
+                                        transition="transform 0.3s"
+                                        _hover={{ transform: "scale(1.05)" }}
+                                    />
                                     </Center>
                                 )}
                             </Box>

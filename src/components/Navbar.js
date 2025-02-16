@@ -10,7 +10,7 @@ import SearchBar from './SearchBar';
 import ProfilePopover from './ProfilePopover'; // Import the updated popover
 import BuyerSidebar from '../pages/BuyerSidebar';
 function Navbar() {
-    const { isOpen, onOpen, onClose } = useDisclosure(); // For Cart Drawer
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isModalOpen, onOpen: onModalOpen, onClose: onModalClose } = useDisclosure(); // For Guest Checkout Modal
 
     const cartItems = useCartStore((state) => state.cartItems); // Zustand to get cart items
