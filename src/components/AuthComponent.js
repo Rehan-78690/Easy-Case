@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { 
-  Box, Button, Flex, Text, Heading, VStack, Input, FormControl, FormLabel,
-  Divider, IconButton, useToast
+import {Box,Button,Flex,Text,Heading,VStack,Input,FormControl,FormLabel,Divider,IconButton,useToast,SimpleGrid,
 } from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
 import { ArrowBackIcon } from "@chakra-ui/icons";
@@ -9,13 +7,23 @@ import { useNavigate } from "react-router-dom";
 import useUserStore from "../stores/userStore";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { loginService, logoutService, signupService } from "../services/authService"; // Import auth functions
+import {
+  loginService,
+  logoutService,
+  signupService,
+} from "../services/authService";
 
 const AuthComponent = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(true);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
-  const [signupData, setSignupData] = useState({ name: "", email: "", password: "" });
+  const [signupData, setSignupData] = useState({
+    firstname: "",
+    lastname: "",
+    username: "",
+    email: "",
+    password: "",
+  });
 
   const { user, fetchUser } = useUserStore();
   const navigate = useNavigate();
@@ -51,7 +59,6 @@ const AuthComponent = () => {
       });
     }
   };
-
 
   const handleSignup = async () => {
     try {
@@ -106,7 +113,9 @@ const AuthComponent = () => {
     return (
       <Box p={8} textAlign="center">
         <Heading size="lg">Welcome, {user.name}!</Heading>
-        <Button mt={4} colorScheme="red" onClick={handleLogout}>Logout</Button>
+        <Button mt={4} colorScheme="red" onClick={handleLogout}>
+          Logout
+        </Button>
       </Box>
     );
   }
@@ -173,13 +182,16 @@ const AuthComponent = () => {
         <Button
           leftIcon={<FcGoogle />}
           w="full"
-          onClick={() => toast({
-            title: "Google Sign-In",
-            description: "Google Sign-In functionality will be integrated here.",
-            status: "info",
-            duration: 3000,
-            isClosable: true,
-          })}
+          onClick={() =>
+            toast({
+              title: "Google Sign-In",
+              description:
+                "Google Sign-In functionality will be integrated here.",
+              status: "info",
+              duration: 3000,
+              isClosable: true,
+            })
+          }
           bg="white"
           color="gray.700"
           _hover={{ bg: "gray.100" }}
@@ -190,93 +202,120 @@ const AuthComponent = () => {
 
         <Divider />
 
-        {/* Authentication Form */}
-        <VStack spacing={4} width="100%" mt={4}>
-          {!isLogin && (
-            <FormControl>
-              <FormLabel color="white">Full Name</FormLabel>
-              <Input
-                type="text"
-                placeholder="Enter your name"
-                value={signupData.name}
-                onChange={(e) => setSignupData({ ...signupData, name: e.target.value })}
-                bg="rgba(255,255,255,0.2)"
-                border="none"
-                color="white"
-                _placeholder={{ color: "gray.300" }}
-              />
-            </FormControl>
-          )}
+<VStack spacing={4} width="100%" mt={4}>
+  {!isLogin && (
+    <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4} width="100%">
+      <FormControl>
+        <FormLabel color="white">Full Name</FormLabel>
+        <Input
+          type="text"
+          placeholder="Enter your username"
+          value={signupData.username}
+          onChange={(e) => setSignupData({ ...signupData, username: e.target.value })}
+          bg="rgba(255,255,255,0.2)"
+          border="none"
+          color="white"
+          _placeholder={{ color: "gray.300" }}
+        />
+      </FormControl>
 
-          <FormControl>
-            <FormLabel color="white">{isLogin ? "Email" : "Email"}</FormLabel>
-            <Input
-              type="email"
-              placeholder="Enter your email"
-              value={isLogin ? loginData.email : signupData.email}
-              onChange={(e) =>
-                isLogin
-                  ? setLoginData({ ...loginData, email: e.target.value })
-                  : setSignupData({ ...signupData, email: e.target.value })
-              }
-              bg="rgba(255,255,255,0.2)"
-              border="none"
-              color="white"
-              _placeholder={{ color: "gray.300" }}
-            />
-          </FormControl>
+      <FormControl>
+        <FormLabel color="white">First Name</FormLabel>
+        <Input
+          type="text"
+          placeholder="Enter your first name"
+          value={signupData.firstname}
+          onChange={(e) => setSignupData({ ...signupData, firstname: e.target.value })}
+          bg="rgba(255,255,255,0.2)"
+          border="none"
+          color="white"
+          _placeholder={{ color: "gray.300" }}
+        />
+      </FormControl>
+    </SimpleGrid>
+  )}
 
-          {!isLogin && (
-            <FormControl>
-              <FormLabel color="white">Phone Number</FormLabel>
-              <PhoneInput
-                country={"us"}
-                value={signupData.phone}
-                onChange={(phone) => setSignupData({ ...signupData, phone })}
-                inputStyle={{
-                  width: "100%",
-                  background: "rgba(255,255,255,0.2)",
-                  color: "white",
-                  border: "none",
-                }}
-              />
-            </FormControl>
-          )}
+  {!isLogin && (
+    <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4} width="100%">
+      <FormControl>
+        <FormLabel color="white">Last Name</FormLabel>
+        <Input
+          type="text"
+          placeholder="Enter your last name"
+          value={signupData.lastname}
+          onChange={(e) => setSignupData({ ...signupData, lastname: e.target.value })}
+          bg="rgba(255,255,255,0.2)"
+          border="none"
+          color="white"
+          _placeholder={{ color: "gray.300" }}
+        />
+      </FormControl>
 
-          <FormControl>
-            <FormLabel color="white">Password</FormLabel>
-            <Input
-              type="password"
-              placeholder="Enter password"
-              value={isLogin ? loginData.password : signupData.password}
-              onChange={(e) =>
-                isLogin
-                  ? setLoginData({ ...loginData, password: e.target.value })
-                  : setSignupData({ ...signupData, password: e.target.value })
-              }
-              bg="rgba(255,255,255,0.2)"
-              border="none"
-              color="white"
-              _placeholder={{ color: "gray.300" }}
-            />
-          </FormControl>
+      <FormControl>
+        <FormLabel color="white">Phone Number</FormLabel>
+        <PhoneInput
+          country={"us"}
+          value={signupData.phone}
+          onChange={(phone) => setSignupData({ ...signupData, phone })}
+          inputStyle={{
+            width: "100%",
+            background: "rgba(255,255,255,0.2)",
+            color: "white",
+            border: "none",
+          }}
+        />
+      </FormControl>
+    </SimpleGrid>
+  )}
 
-          <Button w="full" mt={4} colorScheme="blue" onClick={isLogin ? handleLogin : handleSignup}>
-            {isLogin ? "Login" : "Sign Up"}
-          </Button>
+  <FormControl>
+    <FormLabel color="white">Email</FormLabel>
+    <Input
+      type="email"
+      placeholder="Enter your email"
+      value={isLogin ? loginData.email : signupData.email}
+      onChange={(e) =>
+        isLogin
+          ? setLoginData({ ...loginData, email: e.target.value })
+          : setSignupData({ ...signupData, email: e.target.value })
+      }
+      bg="rgba(255,255,255,0.2)"
+      border="none"
+      color="white"
+      _placeholder={{ color: "gray.300" }}
+    />
+  </FormControl>
 
-          <Text mt={4} fontSize="sm" color="white">
-          {isLogin ? "Don't have an account?" : "Already have an account?"}
-          <Button
-            variant="link"
-            colorScheme="white"
-            ml={1}
-            onClick={() => setIsLogin(!isLogin)}
-          >
-            {isLogin ? "Sign Up" : "Login"}
-          </Button>
-        </Text>
-        </VStack>
+  <FormControl>
+    <FormLabel color="white">Password</FormLabel>
+    <Input
+      type="password"
+      placeholder="Enter password"
+      value={isLogin ? loginData.password : signupData.password}
+      onChange={(e) =>
+        isLogin
+          ? setLoginData({ ...loginData, password: e.target.value })
+          : setSignupData({ ...signupData, password: e.target.value })
+      }
+      bg="rgba(255,255,255,0.2)"
+      border="none"
+      color="white"
+      _placeholder={{ color: "gray.300" }}
+    />
+  </FormControl>
+
+  <Button w="full" mt={4} colorScheme="blue" onClick={isLogin ? handleLogin : handleSignup}>
+    {isLogin ? "Login" : "Sign Up"}
+  </Button>
+
+  <Text mt={4} fontSize="sm" color="white">
+    {isLogin ? "Don't have an account?" : "Already have an account?"}
+    <Button variant="link" colorScheme="white" ml={1} onClick={() => setIsLogin(!isLogin)}>
+      {isLogin ? "Sign Up" : "Login"}
+    </Button>
+  </Text>
+</VStack>
+
       </Flex>
     </Flex>
   );

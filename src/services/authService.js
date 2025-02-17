@@ -57,7 +57,7 @@ export const logoutService = async () => {
         // Clear tokens from local storage
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
-        window.location.href = '/login';  // Redirect after logout
+        window.location.href = '/auth';  // Redirect after logout
     } catch (error) {
         console.error('Logout failed', error.response?.data || error.message);
     }
@@ -67,7 +67,7 @@ export const logoutService = async () => {
 export const signupService = async (userData) => {
     try {
         await axios.post(`${API_URL}/users/`, userData);
-        window.location.href = '/login';
+        window.location.href = '/auth';
     } catch (error) {
         throw new Error(error.response?.data?.detail || 'Signup failed');
     }

@@ -18,9 +18,8 @@ const useSignup = () => {
         console.log(newFormData);
         try {
             await signupService(newFormData);
-            // Handle post-signup actions (e.g., redirect to login page)
             console.log('Signup successful');
-            window.location.href = '/login';
+            window.location.href = '/MainSellerPage';
         } catch (err) {
             setError(err.message || 'Signup failed');
         } finally {

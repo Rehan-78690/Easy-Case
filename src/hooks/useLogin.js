@@ -16,8 +16,8 @@ const useLogin = () => {
         
         try {
             const data = await loginService(newCredentials);
-            localStorage.setItem('accessToken', data.access);  // Store access token
-            localStorage.setItem('refreshToken', data.refresh); // Store refresh token
+            localStorage.setItem('accessToken', data.access);
+            localStorage.setItem('refreshToken', data.refresh);
             console.log('Login successful');
         } catch (err) {
             setError(err.message);
