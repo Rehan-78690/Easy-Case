@@ -29,7 +29,7 @@ api.interceptors.request.use(
                 console.error('Failed to refresh token:', error);
                 localStorage.removeItem('accessToken');
                 localStorage.removeItem('refreshToken');
-                window.location.href = '/login'; // Force re-login if token can't be refreshed
+                window.location.href = '/auth'; // Force re-login if token can't be refreshed
             }
         }
 

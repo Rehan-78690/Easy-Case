@@ -20,10 +20,11 @@ const useAuthStore = create((set) => ({
             // Login and get tokens
             const response = await axios.post('http://127.0.0.1:8000/auth/jwt/create/', newCredentials);
             const { access, refresh } = response.data;
-
+            console.log(response.data);
             // Store tokens
             localStorage.setItem('accessToken', access);
             localStorage.setItem('refreshToken', refresh);
+            localStorage.setItem('token', response.data.email);
             console.log(access)
             // Fetch the user's profile using the /users/me/ endpoint
             const userProfileResponse = await api.get('/auth/users/me/');

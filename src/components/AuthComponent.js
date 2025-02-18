@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import useUserStore from "../stores/userStore";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import useAuthStore from '../stores/authStore';
 import {
   loginService,
   logoutService,
@@ -17,6 +18,7 @@ const AuthComponent = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(true);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
+  const { login, error, isAuthenticated } = useAuthStore(); 
   const [signupData, setSignupData] = useState({
     firstname: "",
     lastname: "",
@@ -40,7 +42,7 @@ const AuthComponent = () => {
   // Handle Login
   const handleLogin = async () => {
     try {
-      const response = await loginService(loginData);
+      const response = await login(loginData);
       toast({
         title: "Login Successful!",
         description: "Welcome back!",
@@ -48,7 +50,7 @@ const AuthComponent = () => {
         duration: 3000,
         isClosable: true,
       });
-      navigate("/MainSellerPage");
+      navigate("/");
     } catch (error) {
       toast({
         title: "Login Failed",
