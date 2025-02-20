@@ -1,6 +1,5 @@
 // store/userStore.js
 import { create } from 'zustand';
-import axios from 'axios';
 import api from '../services/authInterceptor';
 
 const useUserStore = create((set) => ({
@@ -29,7 +28,6 @@ const useUserStore = create((set) => ({
             set({ user: updatedUserData });
             return true;
         } catch (error) {
-            console.error('Error updating user data:', error);
             set({ error: error.message });
             return false;
         }

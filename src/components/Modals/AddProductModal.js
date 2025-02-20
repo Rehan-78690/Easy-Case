@@ -1,9 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, 
-  Input, Select, Button, Grid, GridItem, FormControl, FormLabel, Textarea 
-} from '@chakra-ui/react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  Input,
+  Select,
+  Button,
+  Grid,
+  GridItem,
+  FormControl,
+  FormLabel,
+  Textarea,
+  useToast,
+} from "@chakra-ui/react";
+import axios from "axios";
 
 const AddProductModal = ({
   isOpen,
@@ -14,132 +28,155 @@ const AddProductModal = ({
   handleAddProduct,
   handleImageUpload,
   collections,
-  editingProductId
+  editingProductId,
 }) => {
-  const [tags, setTags] = useState('');
+  const [tags, setTags] = useState("");
+  const toast = useToast();
 
+  // Reset fields when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setNewProduct({});
+      setTags("");
+    }
+  }, [isOpen, setNewProduct]);
+
+  // Load tags when editing
   useEffect(() => {
     if (editingProductId) {
-      setTags(newProduct.tags?.join(', ') || '');
+      setTags(newProduct.tags?.join(", ") || "");
     } else {
-      setTags('');
+      setTags("");
     }
   }, [editingProductId, newProduct]);
 
   const handleTagChange = (event) => setTags(event.target.value);
 
   const handleSubmit = async () => {
-    const tagList = tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+    const tagList = tags.split(",").map((tag) => tag.trim()).filter((tag) => tag !== "");
     const productData = { ...newProduct, tags: tagList };
 
     try {
-      await axios.post('products/', productData);
+      await axios.post("products/", productData);
+      toast({
+        title: editingProductId ? "Product Updated" : "Product Added",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
       onClose();
     } catch (error) {
       console.error("Error adding product:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add product.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="xl" motionPreset="slideInBottom">
+    <Modal isOpen={isOpen} onClose={onClose} size="lg" motionPreset="slideInBottom">
       <ModalOverlay />
-      <ModalContent bg="#0A0E23" color="white" borderRadius="lg" boxShadow="lg" p={4}>
-        <ModalHeader textAlign="center" fontSize="xl">
-          {editingProductId ? 'Update Product' : 'Add New Product'}
+      <ModalContent bg="white" color="black" borderRadius="lg" boxShadow="xl" p={4}>
+        <ModalHeader textAlign="center" fontSize="xl" fontWeight="bold">
+          {editingProductId ? "Update Product" : "Add New Product"}
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={4}>
             <GridItem>
               <FormControl>
-                <FormLabel>Product Name</FormLabel>
+                <FormLabel fontWeight="bold">Product Name</FormLabel>
                 <Input
                   name="title"
                   placeholder="Enter product name"
-                  value={newProduct.title || ''}
+                  value={newProduct.title || ""}
                   onChange={handleInputChange}
-                  bg="gray.700"
-                  color="white"
-                  _focus={{ borderColor: '#F47D31', boxShadow: '0 0 0 2px #F47D31' }}
+                  bg="gray.100"
+                  borderRadius="md"
+                  _focus={{ borderColor: "#3182CE", boxShadow: "0 0 5px #3182CE" }}
                 />
               </FormControl>
             </GridItem>
 
             <GridItem>
               <FormControl>
-                <FormLabel>Slug</FormLabel>
+                <FormLabel fontWeight="bold">Slug</FormLabel>
                 <Input
                   name="slug"
                   placeholder="Enter product slug"
-                  value={newProduct.slug || ''}
+                  value={newProduct.slug || ""}
                   onChange={handleInputChange}
-                  bg="gray.700"
-                  color="white"
-                  _focus={{ borderColor: '#F47D31', boxShadow: '0 0 0 2px #F47D31' }}
+                  bg="gray.100"
+                  borderRadius="md"
+                  _focus={{ borderColor: "#3182CE", boxShadow: "0 0 5px #3182CE" }}
                 />
               </FormControl>
             </GridItem>
 
             <GridItem colSpan={{ base: 1, md: 2 }}>
               <FormControl>
-                <FormLabel>Description</FormLabel>
+                <FormLabel fontWeight="bold">Description</FormLabel>
                 <Textarea
                   name="description"
                   placeholder="Enter product description"
-                  value={newProduct.description || ''}
+                  value={newProduct.description || ""}
                   onChange={handleInputChange}
-                  bg="gray.700"
-                  color="white"
-                  _focus={{ borderColor: '#F47D31', boxShadow: '0 0 0 2px #F47D31' }}
+                  bg="gray.100"
+                  borderRadius="md"
+                  _focus={{ borderColor: "#3182CE", boxShadow: "0 0 5px #3182CE" }}
                 />
               </FormControl>
             </GridItem>
 
             <GridItem>
               <FormControl>
-                <FormLabel>Price</FormLabel>
+                <FormLabel fontWeight="bold">Price</FormLabel>
                 <Input
                   name="unit_price"
                   type="number"
                   placeholder="Enter price"
-                  value={newProduct.unit_price || ''}
+                  value={newProduct.unit_price || ""}
                   onChange={handleInputChange}
-                  bg="gray.700"
-                  color="white"
-                  _focus={{ borderColor: '#F47D31', boxShadow: '0 0 0 2px #F47D31' }}
+                  bg="gray.100"
+                  borderRadius="md"
+                  _focus={{ borderColor: "#3182CE", boxShadow: "0 0 5px #3182CE" }}
                 />
               </FormControl>
             </GridItem>
 
             <GridItem>
               <FormControl>
-                <FormLabel>Quantity</FormLabel>
+                <FormLabel fontWeight="bold">Quantity</FormLabel>
                 <Input
                   name="inventory"
                   type="number"
                   placeholder="Enter available quantity"
-                  value={newProduct.inventory || ''}
+                  value={newProduct.inventory || ""}
                   onChange={handleInputChange}
-                  bg="gray.700"
-                  color="white"
-                  _focus={{ borderColor: '#F47D31', boxShadow: '0 0 0 2px #F47D31' }}
+                  bg="gray.100"
+                  borderRadius="md"
+                  _focus={{ borderColor: "#3182CE", boxShadow: "0 0 5px #3182CE" }}
                 />
               </FormControl>
             </GridItem>
 
             <GridItem>
               <FormControl>
-                <FormLabel>Select Collection</FormLabel>
+                <FormLabel fontWeight="bold">Select Collection</FormLabel>
                 <Select
                   name="collection"
-                  value={newProduct.collection || ''}
+                  value={newProduct.collection || ""}
                   onChange={handleInputChange}
-                  bg="gray.700"
-                  color="white"
-                  _focus={{ borderColor: '#F47D31', boxShadow: '0 0 0 2px #F47D31' }}
+                  bg="gray.100"
+                  borderRadius="md"
+                  _focus={{ borderColor: "#3182CE", boxShadow: "0 0 5px #3182CE" }}
                 >
-                  {collections.map(collection => (
-                    <option key={collection.id} value={collection.id} style={{ color: 'black' }}>
+                  {collections.map((collection) => (
+                    <option key={collection.id} value={collection.id} style={{ color: "black" }}>
                       {collection.title}
                     </option>
                   ))}
@@ -149,13 +186,13 @@ const AddProductModal = ({
 
             <GridItem>
               <FormControl>
-                <FormLabel>Upload Image</FormLabel>
+                <FormLabel fontWeight="bold">Upload Image</FormLabel>
                 <Input
                   type="file"
                   accept="image/*"
                   onChange={handleImageUpload}
-                  bg="gray.700"
-                  color="white"
+                  bg="gray.100"
+                  borderRadius="md"
                   p={1}
                 />
               </FormControl>
@@ -163,15 +200,15 @@ const AddProductModal = ({
 
             <GridItem colSpan={{ base: 1, md: 2 }}>
               <FormControl>
-                <FormLabel>Tags</FormLabel>
+                <FormLabel fontWeight="bold">Tags</FormLabel>
                 <Input
                   name="tags"
                   placeholder="Enter tags (comma-separated)"
                   value={tags}
                   onChange={handleTagChange}
-                  bg="gray.700"
-                  color="white"
-                  _focus={{ borderColor: '#F47D31', boxShadow: '0 0 0 2px #F47D31' }}
+                  bg="gray.100"
+                  borderRadius="md"
+                  _focus={{ borderColor: "#3182CE", boxShadow: "0 0 5px #3182CE" }}
                 />
               </FormControl>
             </GridItem>
@@ -181,14 +218,14 @@ const AddProductModal = ({
         <ModalFooter justifyContent="center">
           <Button
             onClick={handleSubmit}
-            bg="#F47D31"
+            bg="#3182CE"
             color="white"
-            _hover={{ bg: '#FF8C42', boxShadow: '0px 4px 10px rgba(255,140,66,0.4)' }}
+            _hover={{ bg: "#2B6CB0", boxShadow: "0px 4px 10px rgba(50,120,255,0.4)" }}
             size="lg"
             borderRadius="md"
             px={6}
           >
-            {editingProductId ? 'Update Product' : 'Add Product'}
+            {editingProductId ? "Update Product" : "Add Product"}
           </Button>
         </ModalFooter>
       </ModalContent>

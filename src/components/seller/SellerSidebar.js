@@ -5,13 +5,13 @@ import {FaBars,FaTimes,FaHome,FaProjectDiagram,FaUserAlt,FaUsers,FaChartLine,FaF
 import { Button } from "@chakra-ui/react";
 import {useNavigate} from 'react-router-dom';
 import LogoutModal from'./../Modals/LogoutModal';
-
+import useAuthStore from '../../stores/authStore';
 
 const navitems = [
   { text: "Home", icon: FaHome, link: "home" },
   { text: "Earnings", icon: FaChartLine, link: "earnings" },
   { text: "Inventory", icon: FaBoxOpen, link: "manage-inventory" },
-  { text: "Service", icon: FaUserAlt, link: "services" },
+  // { text: "Service", icon: FaUserAlt, link: "services" },
   { text: "Orders", icon: FaUsers, link: "orders" },
   { text: "Analytics", icon: FaProjectDiagram, link: "analytics" },
   { text: "Reports", icon: FaFileAlt, link: "report" },
@@ -24,13 +24,16 @@ const SellerSidebar = ({ onselect, isOpen, setIsOpen }) => {
   // const [isOpen, setIsOpen] = useState(true);
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
   const navigate = useNavigate();
+  const {logout} = useAuthStore();
 
+  
   const handleClick = (link) => {
     setActiveItem(link);
     onselect(link);
   };
 
   const handleLogout = () => {
+    logout();
     navigate('/')
     setIsLogoutOpen(false);
   };

@@ -13,7 +13,7 @@ import LikeProduct from './LikeProduct';
 
 import ErrorImage from './../assets/images/ImageError.jpg'
 
-function ProductListing({ vendorId }) {
+function ProductListing({ vendorId,PageTtitle }) {
     const { data: products, isLoading, error } = useProducts();
     const { addToCartMutation } = useCart();
     const navigate = useNavigate();
@@ -82,7 +82,7 @@ function ProductListing({ vendorId }) {
         <Box>
             {/* Top Header */}
             <Box bgGradient="linear(to-r, #132063, #0A0E23)" py={4} px={6} textAlign="center" color="white">
-                <Heading size="lg">Product Listing Page</Heading>
+                <Heading size="lg">{PageTtitle}</Heading>
             </Box>
 
             {/* No Products Available Banner */}
@@ -116,9 +116,9 @@ function ProductListing({ vendorId }) {
                             {/* Product Image */}
                             <Box height="200px" width="100%" overflow="hidden" mb={4} borderRadius="md" bg="gray.100">
                                 <Box position="relative">
-                                    <Box position="absolute" right={2} top={2}>
+                                    {/* <Box position="absolute" right={2} top={2}>
                                         <LikeProduct productId={product.id} />
-                                    </Box>
+                                    </Box> */}
                                 </Box>
                                 {product.images && product.images.length > 0 ? (
                                     <Image

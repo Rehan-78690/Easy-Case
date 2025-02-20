@@ -1,154 +1,99 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Text, Select, Button, Flex, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper } from '@chakra-ui/react';
-import { useMutation } from '@tanstack/react-query';  // React Query v5 hook
-import { createOrder, createPaymentIntent } from '../services/checkoutService';  // Import service functions
-import { useToast } from '@chakra-ui/react';  // Import toast for notifications
-import GuestInfoModal from '../components/GuestInfoModal';  // Assume you have this modal for guest info
+import { useCart } from '../hooks/useCart';
+import useCartStore from '../stores/cartStore';
+import {
+    Box, Text, Select, Button, Flex, NumberInput, NumberInputField, NumberInputStepper, 
+    NumberIncrementStepper, NumberDecrementStepper, VStack, HStack, Badge, Divider, useToast
+} from '@chakra-ui/react';
+import GuestInfoModal from '../components/GuestInfoModal';
 
 const ProductInfo = ({ product }) => {
-    const [size, setSize] = useState('');
-    const [color, setColor] = useState('');
     const [quantity, setQuantity] = useState(1);
     const [loading, setLoading] = useState(false);
-    const [isGuestCheckout, setIsGuestCheckout] = useState(false);  // Track guest checkout flow
-    const [guestInfo, setGuestInfo] = useState({});  // Store guest information
-    const navigate = useNavigate();  // For redirecting after order creation
-    const toast = useToast();  // To show notifications
+    const [isGuestCheckout, setIsGuestCheckout] = useState(false);
+    const navigate = useNavigate();
+    const toast = useToast();
+    const { addToCartMutation } = useCart();
+    const cartItems = useCartStore((state) => state.cartItems);
 
-    // Step 1: Create mutations for order and payment intent
-    // const createOrderMutation = useMutation({
-    //     mutationFn: createOrder,  // Pass the mutation function directly
-    //     onError: (error) => {
-    //         console.error('Error creating order:', error);
-    //         toast({
-    //             title: 'Error',
-    //             description: 'Failed to create order. Please try again.',
-    //             status: 'error',
-    //             duration: 5000,
-    //             isClosable: true,
-    //         });
-    //         setLoading(false);
-    //     },
-    // });
-
-    // const createPaymentIntentMutation = useMutation({
-    //     mutationFn: createPaymentIntent,  // Pass the mutation function directly
-    //     onError: (error) => {
-    //         console.error('Error creating payment intent:', error);
-    //         toast({
-    //             title: 'Payment Failed',
-    //             description: 'Something went wrong with payment.',
-    //             status: 'error',
-    //             duration: 5000,
-    //             isClosable: true,
-    //         });
-    //         setLoading(false);
-    //     },
-    // });
-
-    // Step 2: Handle Buy Now click
+    // Handle Buy Now click
     const handleBuyNowClick = async () => {
-        setLoading(true);  // Show loading spinner
-
-        const accessToken = localStorage.getItem('accessToken');  // Check if user is authenticated
-
-        // If user is not authenticated, show the guest info modal
+        setLoading(true);
+        const accessToken = localStorage.getItem('accessToken');
+        
         if (!accessToken) {
-            setIsGuestCheckout(true);  // Show guest modal
+            setIsGuestCheckout(true);
             setLoading(false);
             return;
         }
 
-        // Redirect to the checkout page with the product ID and quantity as parameters
         navigate(`/checkout`, { state: { productId: product.id, quantity } });
-    
-
-        // Authenticated flow
-        // try {
-        //     // Step 1: Create the order
-        //     const { orderId } = await createOrderMutation.mutateAsync({
-        //         productId: product.id,
-        //         quantity,
-        //         userInfo: null  // For authenticated users, no need for guest info
-        //     });
-
-        //     // Step 2: Create the payment intent for the order
-        //     //const clientSecret = await createPaymentIntentMutation.mutateAsync({ orderId });
-
-        //     // Redirect to the payment page
-        //     navigate(`/checkout/${orderId}`);  // Redirect to checkout page
-
-        // } catch (error) {
-        //     console.error('Error during Buy Now:', error);
-        // } finally {
-        //     setLoading(false);  // Stop loading spinner
-        // }
     };
 
-    // Handle guest checkout submission (from the modal)
+    // Handle Guest Checkout Submission
     const handleGuestSubmit = async (guestInfo) => {
-        // setLoading(true);
-        // setIsGuestCheckout(false);  // Close the guest modal
-
-        // try {
-
-        //     let createdOrderId = localStorage.getItem('orderId');
-        //     let orderId = createdOrderId;
-        //     // Save the guest info to localStorage for pre-populating on checkout page
-        //     localStorage.setItem('guestInfo', JSON.stringify(guestInfo));
-        //     if (!createdOrderId) {
-        //         // Step 1: Create the order with guest info
-        //         const orderData = await createOrderMutation.mutateAsync({
-        //             productId: product.id,
-        //             quantity,
-        //             userInfo: guestInfo  // Include guest information
-        //         });
-        //         orderId = orderData.orderId;
-        //         localStorage.setItem('orderId', orderId);
-
-        //     }
-        //     // Step 2: Create the payment intent for the order
-        //    // const clientSecret = await createPaymentIntentMutation.mutateAsync({ orderId });
-
-        //     // Redirect to the payment page
-        //     navigate(`/checkout/${orderId}`);
-
-        // } catch (error) {
-        //     console.error('Error during guest checkout:', error);
-        // } finally {
-        //     setLoading(false);
-        // }
-
-        // Save the guest info to localStorage for pre-populating on the checkout page
         localStorage.setItem('guestInfo', JSON.stringify(guestInfo));
-
-        // Redirect to the checkout page with product ID, quantity, and guest info
         navigate(`/checkout`, { state: { productId: product.id, quantity, guestInfo } });
     };
 
+    const handleAddToCart = (product) => {
+        const existingItem = cartItems.find(item => item.product.id === product.id);
+
+        if (existingItem) {
+            toast.info(`"${product.title}" is already in the cart!`);
+        } else {
+            addToCartMutation.mutate({ productId: product.id }, {
+                onSuccess: () => {
+                    toast.success(`"${product.title}" has been added to your cart!`);
+                },
+                onError: () => {
+                    toast.error('Failed to add item to cart. Please try again.');
+                }
+            });
+        }
+    };
+
     return (
-        <Box p={4}>
-            <Text fontSize="2xl" fontWeight="bold" mb={2}>{product.title}</Text>
-            <Text fontSize="lg" color="gray.600" mb={4}>Price: Rs {product.price_with_tax.toFixed(2)}</Text>
-            <Text fontSize="md" color="gray.600" mb={4}>{product.description}</Text>
+        <Box 
+            p={{ base: 4, md: 6 }} 
+            borderRadius="12px" 
+            boxShadow="lg" 
+            bg="white" 
+            w="100%"
+        >
+            {/* Product Title & Pricing */}
+            <VStack align="start" spacing={3}>
+                <Text fontSize={{ base: "lg", md: "2xl" }} fontWeight="bold" color="blue.700">
+                    {product.title}
+                </Text>
+                <HStack>
+                    <Text fontSize="xl" fontWeight="bold" color="green.500">
+                        Rs {product.price_with_tax.toFixed(2)}
+                    </Text>
+                    {product.discount && (
+                        <Badge bg="red.500" color="white" px={2} py={1} borderRadius="5px">
+                            {product.discount}% OFF
+                        </Badge>
+                    )}
+                </HStack>
+                <Text fontSize="md" color="gray.600">{product.description}</Text>
+            </VStack>
 
-            {/* Additional product fields like size, color */}
-            <Select placeholder="Select Size" mb={3} onChange={(e) => setSize(e.target.value)}>
-                <option value="size8">Size 8</option>
-                <option value="size9">Size 9</option>
-                <option value="size10">Size 10</option>
-            </Select>
+            <Divider my={4} />
 
-            <Select placeholder="Select Color" mb={3} onChange={(e) => setColor(e.target.value)}>
-                <option value="white">White</option>
-                <option value="black">Black</option>
-            </Select>
-
-            <Flex gap={4} alignItems="center" mb={4}>
-                <Text fontWeight="bold">Quantity:</Text>
-                {/* Same logic for quantity input as in CartDrawer */}
-                <NumberInput min={1} defaultValue={1} value={quantity} onChange={(value) => setQuantity(parseInt(value))}>
+            {/* Quantity Selector */}
+            <Flex align="center" mb={4}>
+                <Text fontWeight="bold" mr={2}>Quantity:</Text>
+                <NumberInput 
+                    min={1} 
+                    max={product.stock || 100} 
+                    defaultValue={1} 
+                    value={quantity} 
+                    onChange={(value) => setQuantity(parseInt(value))}
+                    size="md"
+                    w="120px"
+                >
                     <NumberInputField />
                     <NumberInputStepper>
                         <NumberIncrementStepper />
@@ -157,9 +102,30 @@ const ProductInfo = ({ product }) => {
                 </NumberInput>
             </Flex>
 
-            <Flex gap={4}>
-                <Button colorScheme="orange" size="lg">Add to Cart</Button>
-                <Button colorScheme="gray" size="lg" isLoading={loading} onClick={handleBuyNowClick}>Buy Now</Button>
+            {/* Action Buttons */}
+            <Flex direction={{ base: "column", md: "row" }} gap={4}>
+                <Button 
+                    colorScheme="orange" 
+                    size="lg" 
+                    w="full"
+                    _hover={{ bg: "orange.600" }}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToCart(product);
+                    }}
+                >
+                    Add to Cart
+                </Button>
+                <Button 
+                    colorScheme="blue" 
+                    size="lg" 
+                    w="full"
+                    isLoading={loading} 
+                    _hover={{ bg: "blue.600" }}
+                    onClick={handleBuyNowClick}
+                >
+                    Buy Now
+                </Button>
             </Flex>
 
             {/* Guest Checkout Modal */}

@@ -11,8 +11,13 @@ import {
   Badge,
   Flex,
   Button,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Icon,
 } from '@chakra-ui/react';
-import { FaArrowLeft } from 'react-icons/fa';
+import { FaArrowLeft, FaBoxOpen } from 'react-icons/fa';
 import { useNavigate, useLocation } from 'react-router-dom';
 import useVendorOrderStore from '../../stores/vendorOrderStore';
 
@@ -36,8 +41,8 @@ const VendorSales = () => {
     setTotalSales(total);
   };
 
-   // Filter orders by month and day
-   const filterOrders = (orders, month, day, year) => {
+  // Filter orders by month, day, and year
+  const filterOrders = (orders, month, day, year) => {
     return orders.filter((order) => {
       const orderDate = new Date(order.placed_at);
       const isSameMonth = orderDate.getMonth() === month;
@@ -46,7 +51,6 @@ const VendorSales = () => {
       return isSameMonth && isSameYear && isSameDay;
     });
   };
-
 
   useEffect(() => {
     if (orders.length === 0) {
@@ -66,22 +70,14 @@ const VendorSales = () => {
     );
   }
 
-  if (error) {
-    return (
-      <Text color="red.500" textAlign="center" mt={8}>
-        {error}
-      </Text>
-    );
-  }
-
   return (
     <Box
       p={6}
-      bg="white"
+      bg="gray.100"
       color="gray.800"
-      borderRadius="md"
-      boxShadow="xl"
-      maxW="600px"
+      borderRadius="lg"
+      boxShadow="lg"
+      maxW={{ base: '100%', md: '700px' }}
       mx="auto"
       mt={8}
     >
@@ -89,27 +85,39 @@ const VendorSales = () => {
       <Button
         leftIcon={<FaArrowLeft />}
         colorScheme="blue"
-        variant="outline"
+        variant="solid"
         mb={4}
         onClick={() => navigate('/MainSellerPage')}
       >
         Back
       </Button>
 
-      <VStack spacing={4} align="stretch">
+      {error && (
+        <Alert status="error" mb={4} borderRadius="md">
+          <AlertIcon />
+          <AlertTitle>Error:</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
+      <VStack spacing={6} align="stretch">
         <Box textAlign="center">
-          <Text fontSize="2xl" fontWeight="bold" mb={2}>
+          <Text fontSize="2xl" fontWeight="bold" mb={2} color="#333">
             Total Sales
           </Text>
-          <Text fontSize="4xl" fontWeight="bold" color="#0A0E27">
+          <Text fontSize="4xl" fontWeight="bold" color="blue.600">
             Rs {totalSales.toFixed(2)}
           </Text>
         </Box>
 
+        {/* Filters */}
         <HStack spacing={4} justifyContent="center" mb={4}>
           <Select
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(parseInt(e.target.value, 10))}
+            bg="white"
+            borderColor="blue.400"
+            _focus={{ borderColor: 'blue.600' }}
           >
             {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map(
               (month, index) => (
@@ -123,6 +131,9 @@ const VendorSales = () => {
           <Select
             value={selectedDay || ''}
             onChange={(e) => setSelectedDay(e.target.value ? parseInt(e.target.value, 10) : null)}
+            bg="white"
+            borderColor="blue.400"
+            _focus={{ borderColor: 'blue.600' }}
           >
             <option value="">All Days</option>
             {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
@@ -135,6 +146,9 @@ const VendorSales = () => {
           <Select
             value={selectedYear}
             onChange={(e) => setSelectedYear(parseInt(e.target.value, 10))}
+            bg="white"
+            borderColor="blue.400"
+            _focus={{ borderColor: 'blue.600' }}
           >
             {[2023, 2024, 2025].map((year) => (
               <option key={year} value={year}>
@@ -143,16 +157,28 @@ const VendorSales = () => {
             ))}
           </Select>
         </HStack>
-        <Box mt={6} bg="white" p={4} borderRadius="md" boxShadow="md">
-          <Text fontSize="xl" fontWeight="bold" color="#0A0E27" mb={4}>
+
+        {/* Sales List */}
+        <Box mt={6} bg="white" p={5} borderRadius="lg" boxShadow="md">
+          <Text fontSize="xl" fontWeight="bold" color="blue.700" mb={4}>
             Sales List
           </Text>
+
           {filteredOrders.length === 0 ? (
-            <Text textAlign="center" color="gray.500">
-              {dayFilter !== undefined ? 'No sales for the selected day.' : 'No sales available at the moment.'}
-            </Text>
+            <Flex
+              direction="column"
+              align="center"
+              justify="center"
+              p={8}
+              color="gray.500"
+            >
+              <Icon as={FaBoxOpen} boxSize={12} color="gray.400" />
+              <Text fontSize="lg" mt={2}>
+                No sales available at the moment.
+              </Text>
+            </Flex>
           ) : (
-            <List spacing={3}>
+            <List spacing={4}>
               {filteredOrders.map((order) => (
                 <ListItem
                   key={order.id}
@@ -160,21 +186,23 @@ const VendorSales = () => {
                   bg="white"
                   borderRadius="md"
                   boxShadow="sm"
-                  _hover={{ bg: 'gray.50' }}
+                  _hover={{ bg: 'blue.50', transform: 'scale(1.02)', transition: '0.2s' }}
                   border="1px solid"
-                  borderColor="#0A0E27"
+                  borderColor="blue.300"
                 >
                   <VStack align="start" spacing={1}>
                     <HStack justify="space-between" w="full">
-                      <Text fontWeight="bold">Order ID: {order.id}</Text>
+                      <Text fontWeight="bold" color="blue.800">
+                        Order ID: {order.id}
+                      </Text>
                       <Badge colorScheme="green" variant="solid">
                         {order.status || 'Completed'}
                       </Badge>
                     </HStack>
-                    <Text fontSize="sm">
+                    <Text fontSize="sm" color="gray.600">
                       Date: {new Date(order.placed_at).toLocaleString()}
                     </Text>
-                    <Text fontSize="lg" fontWeight="bold" color="#0A0E27">
+                    <Text fontSize="lg" fontWeight="bold" color="blue.800">
                       Rs {order.total?.toFixed(2) || '0.00'}
                     </Text>
                   </VStack>

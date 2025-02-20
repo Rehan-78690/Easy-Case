@@ -1,73 +1,113 @@
 import React from 'react';
 import {
     Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter,
-    FormControl, FormLabel, Input, Button, Grid, GridItem
+    FormControl, FormLabel, Input, Button, SimpleGrid, Box, VStack, Divider
 } from '@chakra-ui/react';
 
 const GuestCheckoutModal = ({ isModalOpen, onModalClose, guestInfo, setGuestInfo, handleGuestCheckout }) => {
     return (
-        <Modal isOpen={isModalOpen} onClose={onModalClose}>
+        <Modal isOpen={isModalOpen} onClose={onModalClose} size="lg">
             <ModalOverlay />
-            <ModalContent>
-                <ModalHeader>Guest Checkout Information</ModalHeader>
+            <ModalContent borderRadius="12px" boxShadow="xl" bg="white">
+                <ModalHeader 
+                    fontSize="2xl" 
+                    fontWeight="bold" 
+                    textAlign="center" 
+                    color="blue.600"
+                >
+                    Guest Checkout
+                </ModalHeader>
+                
+                <Divider />
+
                 <ModalBody>
-                    <Grid templateColumns="150px 1fr" gap={4} alignItems="center">
-                        <GridItem><FormLabel>Full Name *</FormLabel></GridItem>
-                        <GridItem>
-                            <Input
-                                value={guestInfo.name}
-                                onChange={(e) => setGuestInfo({ ...guestInfo, name: e.target.value })}
-                            />
-                        </GridItem>
+                    <VStack spacing={4}>
+                        <SimpleGrid columns={2} spacing={4} w="100%">
+                            <FormControl>
+                                <FormLabel fontWeight="bold" color="gray.600">Full Name *</FormLabel>
+                                <Input
+                                    placeholder="Enter full name"
+                                    value={guestInfo.name}
+                                    onChange={(e) => setGuestInfo({ ...guestInfo, name: e.target.value })}
+                                    variant="filled"
+                                    bg="gray.100"
+                                    _focus={{ bg: "white", borderColor: "blue.400" }}
+                                />
+                            </FormControl>
 
-                        <GridItem><FormLabel>Email *</FormLabel></GridItem>
-                        <GridItem>
-                            <Input
-                                type="email"
-                                value={guestInfo.email}
-                                onChange={(e) => setGuestInfo({ ...guestInfo, email: e.target.value })}
-                            />
-                        </GridItem>
+                            <FormControl>
+                                <FormLabel fontWeight="bold" color="gray.600">Email *</FormLabel>
+                                <Input
+                                    type="email"
+                                    placeholder="Enter email"
+                                    value={guestInfo.email}
+                                    onChange={(e) => setGuestInfo({ ...guestInfo, email: e.target.value })}
+                                    variant="filled"
+                                    bg="gray.100"
+                                    _focus={{ bg: "white", borderColor: "blue.400" }}
+                                />
+                            </FormControl>
+                        </SimpleGrid>
 
-                        <GridItem><FormLabel>Address *</FormLabel></GridItem>
-                        <GridItem>
+                        <FormControl>
+                            <FormLabel fontWeight="bold" color="gray.600">Address *</FormLabel>
                             <Input
+                                placeholder="Enter your address"
                                 value={guestInfo.address}
                                 onChange={(e) => setGuestInfo({ ...guestInfo, address: e.target.value })}
+                                variant="filled"
+                                bg="gray.100"
+                                _focus={{ bg: "white", borderColor: "blue.400" }}
                             />
-                        </GridItem>
+                        </FormControl>
 
-                        <GridItem><FormLabel>City *</FormLabel></GridItem>
-                        <GridItem>
-                            <Input
-                                value={guestInfo.city}
-                                onChange={(e) => setGuestInfo({ ...guestInfo, city: e.target.value })}
-                            />
-                        </GridItem>
+                        <SimpleGrid columns={2} spacing={4} w="100%">
+                            <FormControl>
+                                <FormLabel fontWeight="bold" color="gray.600">City *</FormLabel>
+                                <Input
+                                    placeholder="Enter city"
+                                    value={guestInfo.city}
+                                    onChange={(e) => setGuestInfo({ ...guestInfo, city: e.target.value })}
+                                    variant="filled"
+                                    bg="gray.100"
+                                    _focus={{ bg: "white", borderColor: "blue.400" }}
+                                />
+                            </FormControl>
 
-                        <GridItem><FormLabel>Country *</FormLabel></GridItem>
-                        <GridItem>
-                            <Input
-                                value={guestInfo.country}
-                                onChange={(e) => setGuestInfo({ ...guestInfo, country: e.target.value })}
-                            />
-                        </GridItem>
+                            <FormControl>
+                                <FormLabel fontWeight="bold" color="gray.600">Country *</FormLabel>
+                                <Input
+                                    placeholder="Enter country"
+                                    value={guestInfo.country}
+                                    onChange={(e) => setGuestInfo({ ...guestInfo, country: e.target.value })}
+                                    variant="filled"
+                                    bg="gray.100"
+                                    _focus={{ bg: "white", borderColor: "blue.400" }}
+                                />
+                            </FormControl>
+                        </SimpleGrid>
 
-                        <GridItem><FormLabel>Postal Code *</FormLabel></GridItem>
-                        <GridItem>
+                        <FormControl>
+                            <FormLabel fontWeight="bold" color="gray.600">Postal Code *</FormLabel>
                             <Input
+                                placeholder="Enter postal code"
                                 value={guestInfo.postal_code}
                                 onChange={(e) => setGuestInfo({ ...guestInfo, postal_code: e.target.value })}
+                                variant="filled"
+                                bg="gray.100"
+                                _focus={{ bg: "white", borderColor: "blue.400" }}
                             />
-                        </GridItem>
-                    </Grid>
+                        </FormControl>
+                    </VStack>
                 </ModalBody>
 
-                <ModalFooter>
-                    <Button colorScheme="blue" onClick={handleGuestCheckout}>
+                <ModalFooter justifyContent="space-between">
+                    <Button colorScheme="blue" w="full" py={6} fontSize="lg" onClick={handleGuestCheckout}>
                         Proceed to Checkout
                     </Button>
-                    <Button variant="ghost" onClick={onModalClose}>Cancel</Button>
+                    <Button variant="outline" colorScheme="gray" w="full" py={6} fontSize="lg" onClick={onModalClose}>
+                        Cancel
+                    </Button>
                 </ModalFooter>
             </ModalContent>
         </Modal>

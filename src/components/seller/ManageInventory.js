@@ -1,25 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Box, Heading, IconButton, Table, Thead, Tbody, Tr, Th, Td, Button, 
-  Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverCloseButton, 
-  PopoverBody, Input, useDisclosure, Flex 
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Heading,
+  IconButton,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Button,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverBody,
+  Input,
+  useDisclosure,
+  Flex,
 } from "@chakra-ui/react";
 
-import { AddIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
-import { getProducts, createProduct, deleteProduct, updateProduct, addTagToProduct } from '../../services/productService';
-import AddProductModal from './../Modals/AddProductModal'; 
-import { useNavigate } from 'react-router-dom';
-import { ArrowBackIcon, SmallAddIcon } from '@chakra-ui/icons';
-
+import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
+import {
+  getProducts,
+  createProduct,
+  deleteProduct,
+  updateProduct,
+  addTagToProduct,
+} from "../../services/productService";
+import AddProductModal from "./../Modals/AddProductModal";
+import { useNavigate } from "react-router-dom";
+import { ArrowBackIcon, SmallAddIcon } from "@chakra-ui/icons";
 
 const ManageInventory = () => {
   const navigate = useNavigate();
   const [inventoryItems, setInventoryItems] = useState([]);
   const [collections, setCollections] = useState([]);
   const [newProduct, setNewProduct] = useState({
-    title: '',
-    description: '',
-    slug: '',
+    title: "",
+    description: "",
+    slug: "",
     inventory: null,
     unit_price: null,
     collection: null,
@@ -44,7 +65,8 @@ const ManageInventory = () => {
   };
 
   useEffect(() => {
-    async function fetchData(url = 'http://127.0.0.1:8000/store/products') { // Set the default URL
+    async function fetchData(url = "http://127.0.0.1:8000/store/products") {
+      // Set the default URL
       try {
         const products = await getProducts(url); // Pass the URL to the function
         setInventoryItems(products.results);
@@ -55,14 +77,13 @@ const ManageInventory = () => {
         console.error("Error fetching products:", error);
       }
     }
-  
+
     fetchData();
   }, []);
-  
 
   useEffect(() => {
     async function fetchCollections() {
-      const response = await fetch('http://127.0.0.1:8000/store/collections');
+      const response = await fetch("http://127.0.0.1:8000/store/collections");
       const data = await response.json();
       setCollections(data);
     }
@@ -86,9 +107,9 @@ const ManageInventory = () => {
     }
 
     setNewProduct({
-      title: '',
-      description: '',
-      slug: '',
+      title: "",
+      description: "",
+      slug: "",
       inventory: null,
       unit_price: null,
       collection: null,
@@ -123,7 +144,7 @@ const ManageInventory = () => {
   const handleDeleteProduct = async (id) => {
     const isDeleted = await deleteProduct(id);
     if (isDeleted) {
-      setInventoryItems(inventoryItems.filter(item => item.id !== id));
+      setInventoryItems(inventoryItems.filter((item) => item.id !== id));
     }
   };
   const handleAddTagProduct = async (productId) => {
@@ -133,49 +154,48 @@ const ManageInventory = () => {
         alert("Please enter a tag");
         return;
       }
-  
+
       const response = await addTagToProduct(productId, tag); // Call the API service
       alert("Tag added successfully!");
-  
+
       // Update the inventoryItems state to reflect the added tag
       setInventoryItems((prevItems) =>
         prevItems.map((item) =>
-          item.id === productId ? { ...item, tags: [...(item.tags || []), tag] } : item
+          item.id === productId
+            ? { ...item, tags: [...(item.tags || []), tag] }
+            : item
         )
       );
-  
+
       // Clear the input field for the tag
-      setTagInputs({ ...tagInputs, [productId]: '' });
+      setTagInputs({ ...tagInputs, [productId]: "" });
     } catch (error) {
       console.error("Failed to add tag to product:", error);
       alert("Failed to add tag");
     }
   };
-  
 
   const handleTagInputChange = (productId, value) => {
     setTagInputs({ ...tagInputs, [productId]: value });
   };
-  
 
   const handleNextPage = () => {
     if (nextPage) {
       fetchData(nextPage); // Fetch data for the next page
     }
   };
-  
+
   const handlePreviousPage = () => {
     if (previousPage) {
       fetchData(previousPage); // Fetch data for the previous page
     }
   };
-  
 
   return (
-    <Box 
-      p={{ base: "15px", md: "30px" }} 
-      bg="#0A0E23" 
-      color="white" 
+    <Box
+      p={{ base: "15px", md: "30px" }}
+      bg="white"
+      color="black"
       borderRadius="xl"
       boxShadow="lg"
       maxW="1200px"
@@ -187,17 +207,20 @@ const ManageInventory = () => {
         <IconButton
           aria-label="Back"
           icon={<ArrowBackIcon />}
-          colorScheme="orange"
-          onClick={() => navigate('/MainSellerPage')} 
+          colorScheme="blue"
+          onClick={() => navigate("/MainSellerPage")}
+          size="lg"
         />
-        <Heading color="#F47D31" textAlign="center" flex="1">Manage Inventory</Heading>
+        <Heading color="blue.600" textAlign="center" flex="1">
+          Manage Inventory
+        </Heading>
       </Flex>
 
       {/* Add Product Button */}
       <Flex justify="flex-end" mb="15px">
-        <Button 
-          leftIcon={<AddIcon />} 
-          colorScheme="orange"
+        <Button
+          leftIcon={<AddIcon />}
+          colorScheme="blue"
           size="md"
           onClick={onOpen}
         >
@@ -207,34 +230,45 @@ const ManageInventory = () => {
 
       {/* Inventory Table */}
       <Box overflowX="auto" borderRadius="lg" boxShadow="md">
-        <Table 
-          variant="simple" 
-          bg="white" 
-          color="black" 
-          borderRadius="lg" 
-          size="md"
-        >
-          <Thead bg="#F47D31">
+        <Table variant="striped" colorScheme="gray" borderRadius="lg">
+          <Thead bg="blue.500">
             <Tr>
-              <Th color="white" px="10px" py="12px">Product Name</Th>
-              <Th color="white" px="10px" py="12px">Status</Th>
-              <Th color="white" px="10px" py="12px">Quantity</Th>
-              <Th color="white" px="10px" py="12px" textAlign="center">Actions</Th>
+              <Th color="white" px="10px" py="12px">
+                Product Name
+              </Th>
+              <Th color="white" px="10px" py="12px">
+                Status
+              </Th>
+              <Th color="white" px="10px" py="12px">
+                Quantity
+              </Th>
+              <Th color="white" px="10px" py="12px" textAlign="center">
+                Actions
+              </Th>
             </Tr>
           </Thead>
           <Tbody>
-            {inventoryItems.map(item => (
-              <Tr key={item.id} _hover={{ bg: "#F9F9F9" }}>
-                <Td px="10px" py="12px">{item?.title}</Td>
-                <Td px="10px" py="12px" fontWeight="bold" color={item.inventory > 0 ? "green.500" : "red.500"}>
-                  {item.inventory > 0 ? 'In Stock' : 'Out of Stock'}
+            {inventoryItems.map((item) => (
+              <Tr key={item.id} _hover={{ bg: "blue.50" }}>
+                <Td px="10px" py="12px" fontWeight="medium">
+                  {item?.title}
                 </Td>
-                <Td px="10px" py="12px">{item.inventory}</Td>
+                <Td
+                  px="10px"
+                  py="12px"
+                  fontWeight="bold"
+                  color={item.inventory > 0 ? "green.500" : "red.500"}
+                >
+                  {item.inventory > 0 ? "In Stock" : "Out of Stock"}
+                </Td>
+                <Td px="10px" py="12px">
+                  {item.inventory}
+                </Td>
                 <Td px="10px" py="12px" textAlign="center">
                   <IconButton
                     icon={<EditIcon />}
-                    backgroundColor="blue.500"
-                    _hover={{ backgroundColor: "blue.600" }}
+                    backgroundColor="blue.400"
+                    _hover={{ backgroundColor: "blue.500" }}
                     color="white"
                     mr="2"
                     onClick={() => handleEditProduct(item)}
@@ -242,8 +276,8 @@ const ManageInventory = () => {
                   />
                   <IconButton
                     icon={<DeleteIcon />}
-                    backgroundColor="red.500"
-                    _hover={{ backgroundColor: "red.600" }}
+                    backgroundColor="red.400"
+                    _hover={{ backgroundColor: "red.500" }}
                     color="white"
                     mr="2"
                     onClick={() => handleDeleteProduct(item.id)}
@@ -265,10 +299,17 @@ const ManageInventory = () => {
                       <PopoverBody>
                         <Input
                           placeholder="Enter tag"
-                          value={tagInputs[item.id] || ''}
-                          onChange={(e) => handleTagInputChange(item.id, e.target.value)}
+                          value={tagInputs[item.id] || ""}
+                          onChange={(e) =>
+                            handleTagInputChange(item.id, e.target.value)
+                          }
                           size="sm"
                           mb="2"
+                          borderColor="blue.300"
+                          _focus={{
+                            borderColor: "blue.500",
+                            boxShadow: "0 0 0 2px blue.300",
+                          }}
                         />
                         <Button
                           onClick={() => handleAddTagProduct(item.id)}
@@ -292,7 +333,7 @@ const ManageInventory = () => {
         <Button
           onClick={handlePreviousPage}
           isDisabled={!previousPage}
-          colorScheme="orange"
+          colorScheme="blue"
           size="md"
         >
           Previous
@@ -300,7 +341,7 @@ const ManageInventory = () => {
         <Button
           onClick={handleNextPage}
           isDisabled={!nextPage}
-          colorScheme="orange"
+          colorScheme="blue"
           size="md"
         >
           Next
@@ -310,7 +351,11 @@ const ManageInventory = () => {
       {/* Add or Update Product Modal */}
       <AddProductModal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={() => {
+          setNewProduct({}); // Reset form when closing
+          onClose();
+        }}
+        setNewProduct={setNewProduct}
         newProduct={newProduct}
         handleInputChange={handleInputChange}
         handleAddProduct={handleAddProduct}

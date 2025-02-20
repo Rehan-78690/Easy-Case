@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import React from 'react';
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -10,17 +10,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
 // Pages and Components
-import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
 import DashboardPage from './pages/DashboardPage';
 import ProductPage from './pages/ProductDetailpage';
 import CheckoutPage from './components/CheckoutPage';
 import OrderConfirmation from './components/OrderConfirmation';
 import GuestOrderView from './components/GuestOrderView';
-//import Dashboard from './pages/Dashboard';
 import ImageUpload from './components/Image';
-import LogoutButton from './components/LogoutButton';
-import { useCart } from './hooks/useCart';
 import { initializeCart } from './services/cartService'; 
 import useCartStore from './stores/cartStore'; 
 import GuestInfoModal from './components/GuestInfoModal';
@@ -28,11 +23,9 @@ import OrderHistory from './components/OrderHistory';
 import OrderDetail from './components/OrderDetail';
 import GuestOrderTracking from './components/GuestOrderTracking';
 import VendorProductsPage from './components/VendorProductsPage';
-import ProductListing from './components/ProductListing';
 import Profile from './components/Profile';
-import Wishlist from './components/Wishlist';
 import ForYouProducts from './components/ForYouProducts';
-
+import NotificationPage from './components/NotificationPage';
 // Seller Dashboard Components
 import VendorOrders from './components/seller/VendorOrders';
 import MainSellerPage from './components/seller/MainSellerPage';
@@ -42,7 +35,7 @@ import VendorListingPage from './pages/VendorListingPage';
 import VendorSales from './components/seller/VendorSales'
 import ProfilePopover from './components/ProfilePopover';
 import SellerSignup from './components/seller/SellerSignup';
-
+import VerifyOtpPage from './components/VerifyOtpPage';
 
 
 const stripePromise = loadStripe('pk_test_51PsV1D03pR92vHPUx85GxUuipVPCfKAjxsboQbvefxLLoZFQUC0Ec6xD0P99uWJth7pW2SHuGQCCzT7sq2sA9azK00Au7Rxijd');
@@ -94,17 +87,16 @@ function App() {
           }}
         >
         
-        <Router>
+        <BrowserRouter>
           <Routes>
+            <Route path='/notifications' element={<NotificationPage/>}/>
+            <Route path="/verify-otp/:email" element={<VerifyOtpPage/>}/>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/foryou" element={<ForYouProducts/>}/>
-            <Route path="/wishlist" element={<Wishlist/>}/>
             <Route path="/sellersignup" element={<SellerSignup />} />
             <Route path="/profilepop" element={<ProfilePopover />} />
             <Route path="/auth" element={<AuthComponent />} />
             <Route path="/products" element={<ProductSearchPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
             <Route path="/product/:id" element={<ProductPage />} />
             <Route path="/checkout/:orderId" element={<CheckoutPage />} />
             <Route path="/checkout/" element={<CheckoutPage />} />
@@ -112,7 +104,6 @@ function App() {
             <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
             <Route path="/guest-order-confirmation/:orderId" element={<GuestOrderView />} />
             <Route path="/image" element={<ImageUpload />} />
-            <Route path="/logout" element={<LogoutButton />} />
 
             {/* Order Routes */}
             <Route path="/order-history" element={<OrderHistory />} />
@@ -126,8 +117,9 @@ function App() {
             <Route path="/vendors" element={<VendorListingPage/>} />
             <Route path="/vendorsales" element={<VendorSales />} />
             <Route path="/MainSellerPage" element={<MainSellerPage />} />
+           
           </Routes>
-        </Router>
+        </BrowserRouter>
         </Box>
       </Elements>
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover />

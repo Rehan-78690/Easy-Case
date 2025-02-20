@@ -1,186 +1,259 @@
-import React, { useState } from 'react';
+import React, { useEffect,useState } from "react";
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
+import {
+  Box,
+  VStack,
+  HStack,
+  Image,
+  Heading,
+  FormControl,
+  FormLabel,
+  Input,
+  Textarea,
+  Button,
+  useBreakpointValue,
+  useToast,
+  Text,
+  Divider,
+} from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import BuyerSidebar from "../../pages/BuyerSidebar";
+import Navbar from "../Navbar";
+import useAuthStore from "../../stores/authStore";
 
-import { Box, VStack, HStack, Image, Heading, FormControl, FormLabel, Input, Textarea, Button, useBreakpointValue } from "@chakra-ui/react";
-import { useToast } from "@chakra-ui/react";
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import BuyerSidebar from '../../pages/BuyerSidebar';
-import Navbar from '../Navbar';
 const SellerSignup = () => {
-    const userId = localStorage.getItem("vendorId");
-    const [sellerData, setSellerData] = useState({
-        user: userId,
-        name: '',
-        email: '',
-        phone: '',
-        shop_name: '',
-        shop_description: '',
-        shop_address: '',
-    });
+  const userId = localStorage.getItem("vendorId");
+  const toast = useToast();
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  // ✅ Validation Schema using Yup
+  const validationSchema = Yup.object({
+    name: Yup.string().required("Name is required"),
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    phone: Yup.string()
+      .matches(/^\d{10,15}$/, "Phone must be 10-15 digits")
+      .required("Phone number is required"),
+    shop_name: Yup.string().required("Shop name is required"),
+    shop_description: Yup.string().required("Shop description is required"),
+    shop_address: Yup.string().required("Shop address is required"),
+  });
 
-    const toast = useToast();
-    const navigate = useNavigate();
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setSellerData({
-            ...sellerData,
-            [name]: value,
-        });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        try {
-            // Send POST request to backend API
-            await axios.post('http://127.0.0.1:8000/store/vendors/', sellerData);
-            toast({
-                title: `Dear ${sellerData.name},`,
-                description: "Your information is sent to admin. You will receive an email confirmation, and after that, you can log in to your seller account.",
-                status: 'success',
-                duration: 5000,
-                isClosable: true,
-            });
-            navigate('/');
-        } catch (error) {
-            console.error("Error during signup", error);
-
-            // Check if the response contains data with the error message
-            const errorMessage = error.response?.data?.error || "There was an error registering your seller account. Please try again.";
-
-            // Show the error message in the toast
-            toast({
-                title: "Registration Failed",
-                description: errorMessage, // Display the error message from the response
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-            });
+        if (!token) {
+          console.error("No access token found.");
+          return;
         }
 
+        const userProfileResponse = await axios.get("http://127.0.0.1:8000/auth/users/me/", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUser(userProfileResponse.data);
+      } catch (error) {
+        console.error("Error fetching user profile:", error.response ? error.response.data : error);
+      }
     };
 
-    const isMobile = useBreakpointValue({ base: true, md: false });
+    fetchUserProfile();
+  }, []);
 
-    return (
-        <>
-          <BuyerSidebar /> 
-          <Navbar />
-          <Box maxW="800px" mx="auto"  p={8}  boxShadow="xl" borderRadius="lg" bg="white" mt={10} border="1px solid #E2E8F0">
-            <VStack spacing={6} width="100%">
-                {/* Logo */}
-                <Image src="/logo.jpg" alt="Logo" width="200px" />
+  // ✅ Handle form submission
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    try {
+      const sellerData = { ...values, user: userId };
+      await axios.post("http://127.0.0.1:8000/store/vendors/", sellerData);
+      toast({
+        title: `Welcome ${values.name}!`,
+        description:
+          "Your request has been sent to the admin. You'll receive a confirmation email soon.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      resetForm();
+      navigate("/MainSellerPage");
+    } catch (error) {
+      console.error("Signup error", error);
+      toast({
+        title: "Registration Failed",
+        description:
+          "There was an issue registering your seller account. Please try again.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
-                {/* Heading */}
-                <Heading as="h1" size="lg" textAlign="center" color="#0A0E27">
-                    Seller Registration
-                </Heading>
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
-                {/* Form Fields */}
-                <form onSubmit={handleSubmit} style={{ width: "100%" }}>
-                    <VStack spacing={4} width="100%">
+  return (
+    <>
+      <BuyerSidebar />
+      <Navbar />
 
-                        {/* Name & Email */}
-                        <HStack width="100%" spacing={4} flexWrap="wrap">
-                            <FormControl flex="1" isRequired>
-                                <FormLabel>Name</FormLabel>
-                                <Input
-                                    type="text"
-                                    name="name"
-                                    placeholder="Enter your name"
-                                    value={sellerData.name}
-                                    onChange={handleInputChange}
-                                    fontSize="md"
-                                    height="50px"
-                                />
-                            </FormControl>
-                            <FormControl flex="1" isRequired>
-                                <FormLabel>Email</FormLabel>
-                                <Input
-                                    type="email"
-                                    name="email"
-                                    placeholder="Enter your email"
-                                    value={sellerData.email}
-                                    onChange={handleInputChange}
-                                    fontSize="md"
-                                    height="50px"
-                                />
-                            </FormControl>
-                        </HStack>
+      <Box
+        maxW="700px"
+        mx="auto"
+        p={8}
+        borderRadius="lg"
+        bg="white"
+        mt={12}
+        boxShadow="lg"
+        border="1px solid #E2E8F0"
+        transition="all 0.3s ease-in-out"
+        _hover={{ boxShadow: "xl" }}
+      >
+        <VStack spacing={6} width="100%">
+          {/* Logo */}
+          <Image src="/logo.jpg" alt="Logo" width="140px" borderRadius="full" />
 
-                        {/* Phone & Shop Name */}
-                        <HStack width="100%" spacing={4} flexWrap="wrap">
-                            <FormControl flex="1" isRequired>
-                                <FormLabel>Phone</FormLabel>
-                                <Input
-                                    type="tel"
-                                    name="phone"
-                                    placeholder="Enter your phone number"
-                                    value={sellerData.phone}
-                                    onChange={handleInputChange}
-                                    fontSize="md"
-                                    height="50px"
-                                />
-                            </FormControl>
-                            <FormControl flex="1" isRequired>
-                                <FormLabel>Shop Name</FormLabel>
-                                <Input
-                                    type="text"
-                                    name="shop_name"
-                                    placeholder="Enter your shop name"
-                                    value={sellerData.shop_name}
-                                    onChange={handleInputChange}
-                                    fontSize="md"
-                                    height="50px"
-                                />
-                            </FormControl>
-                        </HStack>
+          {/* Heading */}
+          <Heading
+            as="h1"
+            size="lg"
+            textAlign="center"
+            color="#0A0E27"
+            fontWeight="bold"
+          >
+            Become a Seller 🚀
+          </Heading>
 
-                        {/* Shop Description & Shop Address (Full Width) */}
-                        <FormControl isRequired>
-                            <FormLabel>Shop Description</FormLabel>
-                            <Textarea
-                                name="shop_description"
-                                placeholder="Describe your shop"
-                                value={sellerData.shop_description}
-                                onChange={handleInputChange}
-                                fontSize="md"
-                                height="100px"
-                            />
-                        </FormControl>
+          <Text fontSize="md" color="gray.600" textAlign="center">
+            Register now and start selling your products online.
+          </Text>
 
-                        <FormControl isRequired>
-                            <FormLabel>Shop Address</FormLabel>
-                            <Textarea
-                                name="shop_address"
-                                placeholder="Enter your shop address"
-                                value={sellerData.shop_address}
-                                onChange={handleInputChange}
-                                fontSize="md"
-                                height="100px"
-                            />
-                        </FormControl>
+          <Divider />
 
-                        {/* Register Button */}
-                        <Button
-                            type="submit"
-                            bgGradient="linear(to-r, #0A0E27, #1A202C)"
-                            color="white"
-                            width={isMobile ? "100%" : "50%"}
-                            mx="auto"
-                            mt={4}
-                            display="block"
-                            _hover={{ bgGradient: "linear(to-r, #1A202C, #0A0E27)" }}
-                        >
-                            Register
-                        </Button>
-                    </VStack>
-                </form>
-            </VStack>
-        </Box>
-        </>
-    );
+          {/* Form */}
+          <Formik
+            initialValues={{
+              name: user?.username ?? "",  
+              email: user?.email ?? "",  
+              phone: user?.phone ?? "",                
+              shop_name: "",
+              shop_description: "",
+              shop_address: "",
+            }}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
+            {({ errors, touched, isSubmitting }) => (
+              <Form style={{ width: "100%" }}>
+                <VStack spacing={5} width="100%">
+
+                  {/* Name & Email */}
+                  <HStack width="100%" spacing={4} flexWrap="wrap">
+                    <FormControl flex="1" isInvalid={errors.name && touched.name}>
+                      <FormLabel fontSize="sm">Full Name</FormLabel>
+                      <Field
+                        as={Input}
+                        name="name"
+                        placeholder="Enter your name"
+                        height="45px"
+                        borderColor="gray.300"
+                        _focus={{ borderColor: "blue.500", boxShadow: "md" }}
+                      />
+                    </FormControl>
+                    <FormControl flex="1" isInvalid={errors.email && touched.email}>
+                      <FormLabel fontSize="sm">Email Address</FormLabel>
+                      <Field
+                        as={Input}
+                        type="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        height="45px"
+                        borderColor="gray.300"
+                        _focus={{ borderColor: "blue.500", boxShadow: "md" }}
+                      />
+                    </FormControl>
+                  </HStack>
+
+                  {/* Phone & Shop Name */}
+                  <HStack width="100%" spacing={4} flexWrap="wrap">
+                    <FormControl flex="1" isInvalid={errors.phone && touched.phone}>
+                      <FormLabel fontSize="sm">Phone Number</FormLabel>
+                      <Field
+                        as={Input}
+                        type="tel"
+                        name="phone"
+                        placeholder="Enter your phone number"
+                        height="45px"
+                        borderColor="gray.300"
+                        _focus={{ borderColor: "blue.500", boxShadow: "md" }}
+                      />
+                    </FormControl>
+                    <FormControl flex="1" isInvalid={errors.shop_name && touched.shop_name}>
+                      <FormLabel fontSize="sm">Shop Name</FormLabel>
+                      <Field
+                        as={Input}
+                        name="shop_name"
+                        placeholder="Enter your shop name"
+                        height="45px"
+                        borderColor="gray.300"
+                        _focus={{ borderColor: "blue.500", boxShadow: "md" }}
+                      />
+                    </FormControl>
+                  </HStack>
+
+                  {/* Shop Description */}
+                  <FormControl isInvalid={errors.shop_description && touched.shop_description}>
+                    <FormLabel fontSize="sm">Shop Description</FormLabel>
+                    <Field
+                      as={Textarea}
+                      name="shop_description"
+                      placeholder="Describe your shop"
+                      height="100px"
+                      borderColor="gray.300"
+                      _focus={{ borderColor: "blue.500", boxShadow: "md" }}
+                    />
+                  </FormControl>
+
+                  {/* Shop Address */}
+                  <FormControl isInvalid={errors.shop_address && touched.shop_address}>
+                    <FormLabel fontSize="sm">Shop Address</FormLabel>
+                    <Field
+                      as={Textarea}
+                      name="shop_address"
+                      placeholder="Enter your shop address"
+                      height="100px"
+                      borderColor="gray.300"
+                      _focus={{ borderColor: "blue.500", boxShadow: "md" }}
+                    />
+                  </FormControl>
+
+                  {/* Register Button */}
+                  <Button
+                    type="submit"
+                    bgGradient="linear(to-r, blue.500, blue.700)"
+                    color="white"
+                    width={isMobile ? "100%" : "50%"}
+                    mx="auto"
+                    mt={4}
+                    display="block"
+                    isLoading={isSubmitting}
+                    _hover={{ bgGradient: "linear(to-r, blue.700, blue.900)" }}
+                    boxShadow="md"
+                  >
+                    Register Now
+                  </Button>
+                </VStack>
+              </Form>
+            )}
+          </Formik>
+        </VStack>
+      </Box>
+    </>
+  );
 };
 
 export default SellerSignup;

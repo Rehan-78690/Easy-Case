@@ -1,19 +1,40 @@
-import React, { useState, useRef } from 'react';
-import {Box, Badge, Flex, IconButton, Image, useDisclosure, useToast, Button} from '@chakra-ui/react';
-import { FaShoppingCart, FaUser } from 'react-icons/fa'; // Import icons
+import React, { useState, useRef,useEffect } from 'react';
+import { FaShoppingCart, FaUser } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useCheckout } from '../hooks/useCheckout';
 import CartDrawer from './CartDrawer';
 import GuestCheckoutModal from './GuestCheckoutModal';
-import useCartStore from '../stores/cartStore'; // Zustand store for cart state
+import useCartStore from '../stores/cartStore';
 import SearchBar from './SearchBar';
-import ProfilePopover from './ProfilePopover'; // Import the updated popover
+import ProfilePopover from './ProfilePopover';
 import BuyerSidebar from '../pages/BuyerSidebar';
+import { Box, Badge, Flex, IconButton, Image, Button, Text, Avatar, Menu, MenuButton, MenuList, MenuItem, useDisclosure, useToast } from '@chakra-ui/react';
 function Navbar() {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { isOpen: isModalOpen, onOpen: onModalOpen, onClose: onModalClose } = useDisclosure(); // For Guest Checkout Modal
+    const { isOpen: isModalOpen, onOpen: onModalOpen, onClose: onModalClose } = useDisclosure();
+    const cartItems = useCartStore((state) => state.cartItems);
+    const [user, setUser] = useState(null);
 
-    const cartItems = useCartStore((state) => state.cartItems); // Zustand to get cart items
+    useEffect(() => {
+        const accessToken = localStorage.getItem('accessToken');
+        const storedUsername = localStorage.getItem('username');
+        if (accessToken && storedUsername) {
+            setUser(storedUsername);
+        }
+    }, []);
+
+    const handleProfileClick = () => {
+        if (user) {
+            navigate('/profile');
+        } else {
+            navigate('/auth');
+        }
+    };
+
+    const handleBecomeSeller = () => {
+        navigate('/sellersignup'); 
+    };
+
     const [guestInfo, setGuestInfo] = useState({
         name: '',
         email: '',
@@ -25,7 +46,7 @@ function Navbar() {
 
     const toast = useToast();
     const navigate = useNavigate();
-    const profileButtonRef = useRef(); // Create a ref for the profile button
+    const profileButtonRef = useRef();
     const [isProfilePopoverOpen, setIsProfilePopoverOpen] = useState(false);
 
     const { mutate: initiateCheckoutMutation, isLoading: checkoutLoading } = useCheckout();
@@ -56,16 +77,6 @@ function Navbar() {
         }
     };
 
-    // Navigate based on login status using localStorage
-    const handleProfileClick = () => {
-        const accessToken = localStorage.getItem('accessToken'); // Check if user is logged in
-        if (accessToken) {
-            setIsProfilePopoverOpen(!isProfilePopoverOpen); // Toggle profile popover
-        } else {
-            navigate('/auth'); // Navigate to login page if not logged in
-        }
-    };
-
     // Navigate to home on logo click
     const handleLogoClick = () => {
         navigate('/');
@@ -86,17 +97,40 @@ function Navbar() {
 
                 {/* Cart & Profile Icons */}
                 <Flex align="center">
-                    {/* Profile Icon */}
-                    <IconButton
-                        ref={profileButtonRef}
-                        icon={<FaUser />}
-                        aria-label="Profile"
-                        variant="ghost"
-                        size="lg"
-                        color="#0A0E27"
-                        onClick={handleProfileClick}
-                        ml={4}
-                    />
+                    {/* "Become a Seller" Button for Authenticated Users */}
+                    {user && (
+                        <Button ml={4} colorScheme="orange" size="sm" onClick={handleBecomeSeller}>
+                            Become a Seller
+                        </Button>
+                    )}
+                    {/* Profile Section */}
+                    {user ? (
+                        <Menu>
+                            <MenuButton as={Button} variant="ghost" p={0} borderRadius="full">
+                                <Avatar size="sm" name={user} bg="#0A0E27" color="white" />
+                            </MenuButton>
+                            <MenuList>
+                                <MenuItem onClick={() => navigate('/profile')}>Profile</MenuItem>
+                                <MenuItem onClick={() => navigate('/orders')}>My Orders</MenuItem>
+                                <MenuItem onClick={() => {
+                                    localStorage.removeItem('accessToken');
+                                    localStorage.removeItem('username');
+                                    setUser(null);
+                                    navigate('/auth');
+                                }}>Logout</MenuItem>
+                            </MenuList>
+                        </Menu>
+                    ) : (
+                        <IconButton
+                            icon={<FaUser />}
+                            aria-label="Profile"
+                            variant="ghost"
+                            size="lg"
+                            color="#0A0E27"
+                            onClick={handleProfileClick}
+                            ml={4}
+                        />
+                    )}
                     {/* Profile Popover */}
                     {isProfilePopoverOpen && (
                         <ProfilePopover

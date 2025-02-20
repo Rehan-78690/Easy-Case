@@ -20,15 +20,13 @@ const useAuthStore = create((set) => ({
             // Login and get tokens
             const response = await axios.post('http://127.0.0.1:8000/auth/jwt/create/', newCredentials);
             const { access, refresh } = response.data;
-            console.log(response.data);
-            // Store tokens
             localStorage.setItem('accessToken', access);
             localStorage.setItem('refreshToken', refresh);
             localStorage.setItem('token', response.data.email);
-            console.log(access)
+            localStorage.setItem('username', response.data.username)
+            localStorage.setItem('user_id', response.data.id)
             // Fetch the user's profile using the /users/me/ endpoint
             const userProfileResponse = await api.get('/auth/users/me/');
-            console.log('User profile:', userProfileResponse.data);
             const user = userProfileResponse.data;
 
             // Update the zustand store
@@ -40,7 +38,6 @@ const useAuthStore = create((set) => ({
             });
             return true;
         } catch (error) {
-            console.error('Login error:', error);
             return false;
         }
     },
@@ -54,7 +51,6 @@ const useAuthStore = create((set) => ({
             set({ accessToken: newAccessToken });
             return newAccessToken;
         } catch (error) {
-            console.error('Token refresh error:', error);
             return null;
         }
     },
@@ -63,6 +59,8 @@ const useAuthStore = create((set) => ({
     logout: () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
+        localStorage.removeItem('token');
+        localStorage.removeItem('username')
 
         set({
             accessToken: null,
@@ -72,7 +70,7 @@ const useAuthStore = create((set) => ({
         });
 
         // Redirect to login page after logout
-        window.location.href = '/auth';
+        window.location.href = '/';
     },
 }));
 

@@ -14,6 +14,7 @@ import {
   Text,
   HStack,
   Collapse,
+  Button,
 } from '@chakra-ui/react';
 import { HamburgerIcon, ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { 
@@ -21,16 +22,24 @@ import {
   AiOutlineShoppingCart, 
   AiOutlineUser, 
   AiOutlineHome, 
-  AiOutlineHeart // Added Heart Icon for Wishlist 
+  AiOutlineHeart,
 } from 'react-icons/ai';
-import { FiTrendingUp, FiPackage, FiStar, FiBell, FiLogIn, FiMail, FiPhone } from 'react-icons/fi';
-
+import { FiTrendingUp, FiPackage, FiStar, FiBell } from 'react-icons/fi';
+import LogoutModal from '../components/Modals/LogoutModal';
+import useAuthStore from '../stores/authStore';
 const BuyerSidebar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(true);
   const [isSeeAllOpen, setIsSeeAllOpen] = useState(false);
-
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
   const navigate = useNavigate();
+  const {logout} = useAuthStore();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/')
+    setIsLogoutOpen(false);
+  };
 
   // Toggle categories dropdown
   const toggleCategories = () => setIsCategoriesOpen(!isCategoriesOpen);
@@ -68,10 +77,10 @@ const BuyerSidebar = () => {
               </HStack>
 
               {/* Wishlist Option */}
-              <HStack _hover={{ color: '#F47D31' }} cursor="pointer" w="full" py={2} onClick={() => navigate('/wishlist')}>
+              {/* <HStack _hover={{ color: '#F47D31' }} cursor="pointer" w="full" py={2} onClick={() => navigate('/wishlist')}>
                 <AiOutlineHeart />
                 <Text>Wishlist</Text>
-              </HStack>
+              </HStack> */}
 
               {/* Latest Products */}
               <HStack _hover={{ color: '#F47D31' }} cursor="pointer" w="full" py={2} onClick={() => navigate('/products', { state: { preSelectSort: 'last_update' } })}>
@@ -89,13 +98,13 @@ const BuyerSidebar = () => {
                 justify="space-between"
                 w="full"
               >
-                <HStack>
+                {/* <HStack>
                   <AiOutlineShoppingCart />
                   <Text>Shop by Categories</Text>
                 </HStack>
-                {isCategoriesOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                {isCategoriesOpen ? <ChevronUpIcon /> : <ChevronDownIcon />} */}
               </HStack>
-              <Collapse in={isCategoriesOpen}>
+              {/* <Collapse in={isCategoriesOpen}>
                 <VStack align="start" pl={4}>
                   <Text _hover={{ color: '#F47D31' }} cursor="pointer" w="full" py={1}>
                   Transmission
@@ -136,7 +145,7 @@ const BuyerSidebar = () => {
                     </VStack>
                   </Collapse>
                 </VStack>
-              </Collapse>
+              </Collapse> */}
 
               <Box w="full" borderBottom="1px" borderColor="rgba(0, 0, 0, 0.3)" />
 
@@ -151,12 +160,12 @@ const BuyerSidebar = () => {
                 <Text>Track Order</Text>
               </HStack>
 
-              <HStack _hover={{ color: '#F47D31' }} cursor="pointer" w="full" py={2}>
+              {/* <HStack _hover={{ color: '#F47D31' }} cursor="pointer" w="full" py={2}>
                 <FiStar />
                 <Text>Ratings & Reviews</Text>
-              </HStack>
+              </HStack> */}
 
-              <HStack _hover={{ color: '#F47D31' }} cursor="pointer" w="full" py={2}>
+              <HStack _hover={{ color: '#F47D31' }} cursor="pointer" w="full" py={2} onClick={() => navigate('/notifications')}>
                 <FiBell />
                 <Text>Notifications & Updates</Text>
               </HStack>
@@ -165,10 +174,20 @@ const BuyerSidebar = () => {
                 <AiOutlineUser />
                 <Text>My Account</Text>
               </HStack>
+
+              <Button colorScheme="red" width='100%' onClick={() => setIsLogoutOpen(true)}>
+                Logout
+              </Button>
             </VStack>
           </DrawerBody>
         </DrawerContent>
       </Drawer>
+
+      <LogoutModal 
+        isOpen={isLogoutOpen} 
+        onClose={() => setIsLogoutOpen(false)} 
+        onLogout={handleLogout} 
+      />
     </>
   );
 };

@@ -18,7 +18,9 @@ const AuthComponent = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(true);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
-  const { login, error, isAuthenticated } = useAuthStore(); 
+  const { login } = useAuthStore(); 
+  const [errors, setErrors] = useState({});
+
   const [signupData, setSignupData] = useState({
     firstname: "",
     lastname: "",
@@ -62,27 +64,43 @@ const AuthComponent = () => {
     }
   };
 
+  const validateUsername = (username) => {
+    const usernameRegex = /^[a-zA-Z0-9_]{3,}$/;
+    return usernameRegex.test(username);
+  };
+  
   const handleSignup = async () => {
+    setErrors({});
+    
+    if (!validateUsername(signupData.username)) {
+      setErrors((prev) => ({ ...prev, username: "Username must be at least 3 characters and contain only letters, numbers, or underscores." }));
+      return;
+    }
+  
+    setLoading(true);
     try {
-      const response = await signupService(signupData);
+      await signupService(signupData);
       toast({
-        title: "Account Created Successful!",
-        description: "Welcome back!",
+        title: "Account Created!",
+        description: "Welcome to our platform!",
         status: "success",
         duration: 3000,
         isClosable: true,
       });
-      navigate("/MainSellerPage");
+      navigate(`/verify-otp/${signupData.email}`);
     } catch (error) {
       toast({
-        title: "Create Account Failed",
-        description: error.message || "Invalid credentials",
+        title: "Signup Failed",
+        description: error.message || "Something went wrong",
         status: "error",
         duration: 3000,
         isClosable: true,
       });
+    } finally {
+      setLoading(false);
     }
   };
+  
 
   // Handle Logout
   const handleLogout = async () => {
@@ -207,8 +225,8 @@ const AuthComponent = () => {
 <VStack spacing={4} width="100%" mt={4}>
   {!isLogin && (
     <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4} width="100%">
-      <FormControl>
-        <FormLabel color="white">Full Name</FormLabel>
+      <FormControl isInvalid={errors.username}>
+        <FormLabel color="white">User Name</FormLabel>
         <Input
           type="text"
           placeholder="Enter your username"
@@ -219,7 +237,9 @@ const AuthComponent = () => {
           color="white"
           _placeholder={{ color: "gray.300" }}
         />
+        {errors.username && <Text color="red.300" fontSize="sm">{errors.username}</Text>}
       </FormControl>
+
 
       <FormControl>
         <FormLabel color="white">First Name</FormLabel>
@@ -306,9 +326,10 @@ const AuthComponent = () => {
     />
   </FormControl>
 
-  <Button w="full" mt={4} colorScheme="blue" onClick={isLogin ? handleLogin : handleSignup}>
-    {isLogin ? "Login" : "Sign Up"}
-  </Button>
+  <Button w="full" mt={4} colorScheme="blue" onClick={isLogin ? handleLogin : handleSignup} isLoading={loading}>
+      {isLogin ? "Login" : "Sign Up"}
+    </Button>
+
 
   <Text mt={4} fontSize="sm" color="white">
     {isLogin ? "Don't have an account?" : "Already have an account?"}

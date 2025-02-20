@@ -102,7 +102,7 @@ const Banner = () => {
                                     {slide.text}
                                 </MotionText>
 
-                                <MotionButton
+                                {/* <MotionButton
                                     size="lg"
                                     px={8}
                                     py={6}
@@ -115,7 +115,7 @@ const Banner = () => {
                                     borderRadius="full"
                                 >
                                     {slide.button}
-                                </MotionButton>
+                                </MotionButton> */}
                             </MotionBox>
                         </Box>
                     </Box>

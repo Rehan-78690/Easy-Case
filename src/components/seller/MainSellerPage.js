@@ -4,11 +4,11 @@ import SellerDashboard from "./SellerDashboard";
 import { Box, Flex } from "@chakra-ui/react";
 import Earnings from "./Earnings";
 import ManageInventory from "./ManageInventory";
-import ProductListing from "../FeatureProducts";
+import Profile from './../Profile'
 import Ordersdetails from "./VendorOrders";
 import VendorSales from "./VendorSales";
-import ReviewCard from './../ReviewCard'
-import VendorProductsPieChart from "./ProductPieChart";
+import ReviewsPage from './ReviewsPage'
+import VendorReportPage from './ReportPage';
 const MainSellerPage = () => {
   const [selectedSection, setSelectedSection] = useState("home");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -41,12 +41,11 @@ const MainSellerPage = () => {
         {selectedSection === "home" && <SellerDashboard />}
         {selectedSection === "earnings" && <Earnings />}
         {selectedSection === "manage-inventory" && <ManageInventory />}
-        {selectedSection === "services" && <ProductListing />}
         {selectedSection === "orders" && <Ordersdetails/>}
         {selectedSection === "analytics" && <VendorSales />}
-        {selectedSection === "reviews" && <ReviewCard/>}
-        {selectedSection === "report" && <VendorProductsPieChart/>}
-        {selectedSection === "settings" && <ReviewCard/>}
+        {selectedSection === "reviews" && <ReviewsPage/>}
+        {selectedSection === "report" && <VendorReportPage/>}
+        {selectedSection === "settings" && <Profile/>}
       </Box>
     </Flex>
   );
