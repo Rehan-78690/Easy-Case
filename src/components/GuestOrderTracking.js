@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { Box, FormControl, FormLabel, Input, Button, Text } from '@chakra-ui/react';
 import axios from 'axios';
-
+import {BASE_URL} from './../ApiUrl'
 const fetchGuestOrder = async ({ email, orderId }) => {
-    const response = await axios.post('http://127.0.0.1:8000/store/orders/guest-order/', { email, order_id: orderId });
+    const response = await axios.post(`${BASE_URL}/store/orders/guest-order/`, { email, order_id: orderId });
     return response.data;
 };
 

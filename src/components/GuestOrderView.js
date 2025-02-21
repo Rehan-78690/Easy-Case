@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Text, Heading, VStack } from '@chakra-ui/react';
 import axios from 'axios';
-
+import { BASE_URL } from '../ApiUrl';
 const GuestOrderView = () => {
     const { orderId } = useParams();  // Get the order ID from the URL
     const [orderDetails, setOrderDetails] = useState(null);
@@ -12,7 +12,7 @@ const GuestOrderView = () => {
         // Fetch the guest order details from the backend
         const fetchGuestOrder = async () => {
             try {
-                const response = await axios.post('http://127.0.0.1:8000/store/guest-orders/', {
+                const response = await axios.post(`${BASE_URL}/store/guest-orders/`, {
                     order_id: orderId,
                     email: guestEmail,  // Send the guest email along with the order ID
                 });

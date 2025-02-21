@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { refreshTokenService } from './authService';
+import {BASE_URL}  from './../ApiUrl';
+
 
 // Create an instance of Axios for authenticated requests
 const api = axios.create({
-    baseURL: 'http://127.0.0.1:8000/', // Your backend base URL
+    baseURL: BASE_URL, // Your backend base URL
 });
 
 // Add a request interceptor to attach the access token to every request

@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import axios from 'axios';
-import { refreshTokenService } from '../services/authService';  // Import refresh token service
-import api from '../services/authInterceptor';  // Axios instance with interceptor
-
+import { refreshTokenService } from '../services/authService';
+import api from '../services/authInterceptor';
+import {BASE_URL} from './../ApiUrl';
 // Auth Store using Zustand
 const useAuthStore = create((set) => ({
     accessToken: localStorage.getItem('accessToken') || null,
@@ -18,7 +18,7 @@ const useAuthStore = create((set) => ({
                 password: credentials.password
             }
             // Login and get tokens
-            const response = await axios.post('http://127.0.0.1:8000/auth/jwt/create/', newCredentials);
+            const response = await axios.post(`${BASE_URL}/auth/jwt/create/`, newCredentials);
             const { access, refresh } = response.data;
             localStorage.setItem('accessToken', access);
             localStorage.setItem('refreshToken', refresh);

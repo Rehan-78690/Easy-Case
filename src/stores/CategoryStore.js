@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import axios from 'axios';
-
+import {BASE_URL}  from './../ApiUrl';
 const useCategoryStore = create((set) => ({
     categories: [],
     loading: false,
@@ -10,7 +10,7 @@ const useCategoryStore = create((set) => ({
     fetchCategories: async () => {
         set({ loading: true, error: null });
         try {
-            const response = await axios.get('http://127.0.0.1:8000/store/collections/');
+            const response = await axios.get(`${BASE_URL}/store/collections/`);
             set({ categories: response.data, loading: false });
         } catch (error) {
             set({ error: 'Failed to fetch categories', loading: false });

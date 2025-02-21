@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { FaStar } from 'react-icons/fa';
 import axios from 'axios';
-
+import { BASE_URL } from '../ApiUrl';
 const ReviewCard = () => {
     const { id } = useParams(); 
     const [reviews, setReviews] = useState([]);
@@ -25,7 +25,7 @@ const ReviewCard = () => {
     useEffect(() => {
         const fetchReviews = async () => {
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/store/products/${id}/reviews/`);
+                const response = await axios.get(`${BASE_URL}/store/products/${id}/reviews/`);
                 setReviews(response.data); // Assume the API returns a list of reviews
             } catch (error) {
                 console.error('Error fetching reviews:', error);

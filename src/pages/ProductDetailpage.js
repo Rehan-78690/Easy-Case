@@ -12,7 +12,7 @@ import Navbar from '../components/Navbar';
 import ProductListing from '../components/FeatureProducts';
 import SimilarProducts from '../components/SimilarProducts';
 import DEFAULT_IMAGE from  '../assets/images/ImageError.jpg'
-
+import { BASE_URL } from '../ApiUrl';
 
 const ProductPage = () => {
     const { id } = useParams(); // Get the product ID from the route
@@ -25,7 +25,7 @@ const ProductPage = () => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/store/products/${id}/`);
+                const response = await axios.get(`${BASE_URL}/store/products/${id}/`);
                 setProduct(response.data);
             } catch (error) {
                 setError('Failed to fetch product');

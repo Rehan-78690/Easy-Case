@@ -1,5 +1,8 @@
 import axios from "axios";
-const API_URL = 'http://127.0.0.1:8000/verify-otp/'
+import {BASE_URL}  from './../ApiUrl';
+
+const API_URL = `${BASE_URL}/verify-otp/`
+
 export const verifyOtp = async (otp,value) => {
   const method = 'email';
   try {

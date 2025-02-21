@@ -19,7 +19,7 @@ import {
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import useUserStore from '../stores/userStore';
-
+import { BASE_URL } from '../ApiUrl';
 const Profile = () => {
     const [editMode, setEditMode] = useState(false);
     const { user, loading, error, fetchUser, updateUser } = useUserStore();

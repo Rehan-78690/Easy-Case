@@ -1,8 +1,8 @@
 import { EmailIcon } from '@chakra-ui/icons';
 import axios from 'axios';
-
+import {BASE_URL}  from './../ApiUrl';
 // Set the base URL for your backend
-const API_URL = 'http://127.0.0.1:8000/auth';
+const API_URL = `${BASE_URL}/auth`;
 
 // Login Service: Handles sending the login credentials and receiving the JWT tokens
 export const loginService = async (credentials) => {

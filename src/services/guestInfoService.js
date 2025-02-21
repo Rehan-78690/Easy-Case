@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import {BASE_URL}  from './../ApiUrl';
 // Utility function for guest checkout
 export const handleGuestCheckout = async (guestInfo, productId, quantity, setLoading, toast, navigate) => {
     setLoading(true);  // Show loading state
@@ -8,7 +8,7 @@ export const handleGuestCheckout = async (guestInfo, productId, quantity, setLoa
         const cartId = localStorage.getItem('cartId');  // If applicable, get cartId (optional)
 
         // Step 1: Create the order for the guest user
-        const orderResponse = await axios.post('http://127.0.0.1:8000/store/orders/', {
+        const orderResponse = await axios.post(`${BASE_URL}/store/orders/`, {
             name: guestInfo.name,
             email: guestInfo.email,
             address: guestInfo.address,
@@ -23,7 +23,7 @@ export const handleGuestCheckout = async (guestInfo, productId, quantity, setLoa
         const createdOrderId = orderResponse.data.id;
 
         // Step 2: Proceed with Stripe payment using the clientSecret
-        const paymentIntentResponse = await axios.post('http://127.0.0.1:8000/create-payment-intent/', {
+        const paymentIntentResponse = await axios.post(`${BASE_URL}/create-payment-intent/`, {
             order_id: createdOrderId,  // Pass the created order ID to generate payment intent
         });
 

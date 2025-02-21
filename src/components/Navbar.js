@@ -1,5 +1,5 @@
-import React, { useState, useRef,useEffect } from 'react';
-import { FaShoppingCart, FaUser } from 'react-icons/fa';
+import React, { useState, useEffect, useRef } from 'react';
+import { FaShoppingCart, FaUser, FaBars } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useCheckout } from '../hooks/useCheckout';
 import CartDrawer from './CartDrawer';
@@ -8,12 +8,37 @@ import useCartStore from '../stores/cartStore';
 import SearchBar from './SearchBar';
 import ProfilePopover from './ProfilePopover';
 import BuyerSidebar from '../pages/BuyerSidebar';
-import { Box, Badge, Flex, IconButton, Image, Button, Text, Avatar, Menu, MenuButton, MenuList, MenuItem, useDisclosure, useToast } from '@chakra-ui/react';
+import {
+    Box,
+    Badge,
+    Flex,
+    IconButton,
+    Image,
+    Button,
+    Avatar,
+    Menu,
+    MenuButton,
+    MenuList,
+    MenuItem,
+    useDisclosure,
+    useToast,
+    Drawer,
+    DrawerOverlay,
+    DrawerContent,
+    DrawerCloseButton,
+    VStack
+} from '@chakra-ui/react';
+
 function Navbar() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isModalOpen, onOpen: onModalOpen, onClose: onModalClose } = useDisclosure();
+    const { isOpen: isDrawerOpen, onOpen: openDrawer, onClose: closeDrawer } = useDisclosure();
     const cartItems = useCartStore((state) => state.cartItems);
     const [user, setUser] = useState(null);
+    const navigate = useNavigate();
+    const toast = useToast();
+    const profileButtonRef = useRef();
+    const [isProfilePopoverOpen, setIsProfilePopoverOpen] = useState(false);
 
     useEffect(() => {
         const accessToken = localStorage.getItem('accessToken');
@@ -24,85 +49,51 @@ function Navbar() {
     }, []);
 
     const handleProfileClick = () => {
-        if (user) {
-            navigate('/profile');
-        } else {
-            navigate('/auth');
-        }
+        user ? navigate('/profile') : navigate('/auth');
     };
 
     const handleBecomeSeller = () => {
-        navigate('/sellersignup'); 
+        navigate('/sellersignup');
     };
 
-    const [guestInfo, setGuestInfo] = useState({
-        name: '',
-        email: '',
-        address: '',
-        city: '',
-        country: '',
-        postal_code: '',
-    });
-
-    const toast = useToast();
-    const navigate = useNavigate();
-    const profileButtonRef = useRef();
-    const [isProfilePopoverOpen, setIsProfilePopoverOpen] = useState(false);
-
-    const { mutate: initiateCheckoutMutation, isLoading: checkoutLoading } = useCheckout();
-
-    const handleGuestCheckout = () => {
-        if (!guestInfo.name || !guestInfo.email || !guestInfo.address || !guestInfo.city || !guestInfo.postal_code) {
-            toast({
-                title: 'Missing Information',
-                description: 'Please fill in all the required fields.',
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-            });
-            return;
-        }
-       // initiateCheckoutMutation({ cartId: localStorage.getItem('cartId'), guestInfo });
-        onModalClose();
-    };
-
-    const initiateCheckout = () => {
-        const cartId = localStorage.getItem('cartId');
-        const accessToken = localStorage.getItem('accessToken');
-
-        if (accessToken) {
-           // initiateCheckoutMutation({ cartId, guestInfo: {} });
-        } else {
-            onModalOpen();
-        }
-    };
-
-    // Navigate to home on logo click
     const handleLogoClick = () => {
         navigate('/');
     };
+
     return (
-        <Box boxShadow='md' as="nav" bg="#FFFFFF" p={4} borderBottom="4px" borderColor="#0A0E27" mb={0}>
+        <Box as="nav" bg="#FFFFFF" p={3} borderBottom="4px solid #0A0E27" shadow="md">
             <Flex align="center" justify="space-between" maxW="1200px" mx="auto" flexWrap="wrap">
-                <BuyerSidebar />
+                {/* Sidebar Toggle for Mobile */}
+                <IconButton 
+                    icon={<FaBars />} 
+                    aria-label="Open Menu"
+                    onClick={openDrawer}
+                    display={{ base: "block", md: "none" }}
+                />
+
                 {/* Logo */}
-                <Box display="flex" alignItems="center" mb={{ base: 2, md: 0 }} onClick={handleLogoClick} ml={'50px'}>
+                <Box display="flex" alignItems="center" onClick={handleLogoClick} cursor="pointer">
                     <Image src="/logo.jpg" alt="Logo" height="40px" />
                 </Box>
 
-                {/* SearchBar Component */}
-                <Box flex="1" mx="4">
-                    <SearchBar /> {/* Adding SearchBar between the logo and cart icon */}
+                {/* Search Bar */}
+                <Box flex="1" mx="4" display={{ base: "none", md: "block" }}>
+                    <SearchBar />
                 </Box>
 
                 {/* Cart & Profile Icons */}
                 <Flex align="center">
-                    {/* "Become a Seller" Button for Authenticated Users */}
                     {user && (
-                        <Button ml={4} colorScheme="orange" size="sm" onClick={handleBecomeSeller}>
+                        <Button 
+                            ml={4} 
+                            colorScheme="orange" 
+                            size="sm" 
+                            onClick={handleBecomeSeller}
+                        >
                             Become a Seller
                         </Button>
                     )}
+
                     {/* Profile Section */}
                     {user ? (
                         <Menu>
@@ -131,14 +122,6 @@ function Navbar() {
                             ml={4}
                         />
                     )}
-                    {/* Profile Popover */}
-                    {isProfilePopoverOpen && (
-                        <ProfilePopover
-                            isOpen={isProfilePopoverOpen}
-                            onClose={() => setIsProfilePopoverOpen(false)}
-                            profileButtonRef={profileButtonRef}
-                        />
-                    )}
 
                     {/* Cart Icon */}
                     <Flex align="center" position="relative">
@@ -149,17 +132,17 @@ function Navbar() {
                             size="lg"
                             color="#0A0E27"
                             onClick={onOpen}
-                            position="relative"
                         />
                         {cartItems.length > 0 && (
                             <Badge
                                 position="absolute"
-                                top="0"
-                                right="0"
-                                bg="#F47D31"
+                                top="-3px"
+                                right="-3px"
+                                bg="red.500"
                                 color="white"
                                 borderRadius="full"
-                                fontSize="0.675em"
+                                fontSize="0.8em"
+                                px={2}
                             >
                                 {cartItems.length}
                             </Badge>
@@ -168,22 +151,35 @@ function Navbar() {
                 </Flex>
             </Flex>
 
+            {/* Mobile Sidebar Drawer */}
+            <Drawer placement="left" onClose={closeDrawer} isOpen={isDrawerOpen}>
+                <DrawerOverlay />
+                <DrawerContent>
+                    <DrawerCloseButton />
+                    <VStack spacing={4} mt={10} align="stretch">
+                        <Button onClick={() => navigate('/profile')}>Profile</Button>
+                        <Button onClick={() => navigate('/orders')}>My Orders</Button>
+                        <Button colorScheme="red" onClick={() => {
+                            localStorage.removeItem('accessToken');
+                            localStorage.removeItem('username');
+                            setUser(null);
+                            navigate('/auth');
+                        }}>Logout</Button>
+                    </VStack>
+                </DrawerContent>
+            </Drawer>
+
             {/* Cart Drawer */}
             <CartDrawer
                 isOpen={isOpen}
                 onClose={onClose}
                 cartItems={cartItems}
-                initiateCheckout={initiateCheckout}
-                loading={checkoutLoading}
             />
 
             {/* Guest Checkout Modal */}
             <GuestCheckoutModal
                 isModalOpen={isModalOpen}
                 onModalClose={onModalClose}
-                guestInfo={guestInfo}
-                setGuestInfo={setGuestInfo}
-                handleGuestCheckout={handleGuestCheckout}
             />
         </Box>
     );

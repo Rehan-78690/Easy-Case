@@ -24,7 +24,7 @@ import {
   FaBolt,
 } from "react-icons/fa";
 import axios from "axios";
-
+import {BASE_URL} from './../ApiUrl';
 // Icon mapping for auto parts categories
 const iconMap = {
   "Car Battery": FaCarBattery,
@@ -47,7 +47,7 @@ const FeaturedAutoParts = () => {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/store/collections/")
+      .get(`${BASE_URL}/store/collections/`)
       .then((response) => {
         setCategories(response.data);
         setLoading(false);

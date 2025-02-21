@@ -1,7 +1,7 @@
 // productStore.js
 import { create } from 'zustand';
 import axios from 'axios';
-
+import {BASE_URL}  from './../ApiUrl';
 const useProductStore = create((set) => ({
     products: [],
     loading: false,
@@ -9,7 +9,7 @@ const useProductStore = create((set) => ({
     fetchProducts: async () => {
         set({ loading: true });
         try {
-            const { data } = await axios.get('http://127.0.0.1:8000/store/products/');
+            const { data } = await axios.get(`${BASE_URL}/store/products/`);
             set({ products: data.results }); // Assuming the API response is paginated with a 'results' key
         } catch (error) {
             console.error('Error fetching products:', error);

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import api from './authInterceptor';  // For authenticated API calls
-
+import {BASE_URL}  from './../ApiUrl';
 import { useNavigate} from 'react-router-dom'
 export const handleBuyNow = async (productId, quantity = 1, userInfo, setLoading, toast, navigate) => {
    
@@ -16,7 +16,7 @@ export const handleBuyNow = async (productId, quantity = 1, userInfo, setLoading
         if (accessToken) {
             try {
                 // Step 1: Create order for the individual product (authenticated)
-                orderResponse = await api.post('http://127.0.0.1:8000/store/orders/', {
+                orderResponse = await api.post(`${BASE_URL}/store/orders/`, {
                     product_id: productId,
                     quantity: quantity,  // Default quantity of 1
                 });
@@ -24,14 +24,14 @@ export const handleBuyNow = async (productId, quantity = 1, userInfo, setLoading
             } catch (error) {
                 if (error.response && error.response.status === 401 && refreshToken) {
                     // If access token is expired, refresh it
-                    const tokenResponse = await api.post('http://127.0.0.1:8000/auth/refresh-token/', {
+                    const tokenResponse = await api.post(`${BASE_URL}/auth/refresh-token/`, {
                         refresh_token: refreshToken,
                     });
                     const newAccessToken = tokenResponse.data.accessToken;
                     localStorage.setItem('accessToken', newAccessToken);
 
                     // Retry the order creation with the new token
-                    orderResponse = await api.post('http://127.0.0.1:8000/store/orders/', {
+                    orderResponse = await api.post(`${BASE_URL}/store/orders/`, {
                         product_id: productId,
                         quantity: quantity,
                     });
@@ -46,7 +46,7 @@ export const handleBuyNow = async (productId, quantity = 1, userInfo, setLoading
                 throw new Error("Guest user information (name, email, etc.) is missing.");
             }
 
-            orderResponse = await axios.post('http://127.0.0.1:8000/store/orders/', {
+            orderResponse = await axios.post(`${BASE_URL}/store/orders/`, {
                 ...userInfo,  // Include guest information (name, email, etc.)
                 product_id: productId,
                 quantity: quantity,
@@ -55,7 +55,7 @@ export const handleBuyNow = async (productId, quantity = 1, userInfo, setLoading
         }
 
         // Step 2: Proceed with Stripe payment using the clientSecret
-        const paymentIntentResponse = await axios.post('http://127.0.0.1:8000/create-payment-intent/', {
+        const paymentIntentResponse = await axios.post(`${BASE_URL}/create-payment-intent/`, {
             order_id: createdOrderId,  // Send the created order ID to generate the payment intent
         });
 

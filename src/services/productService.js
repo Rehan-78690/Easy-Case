@@ -1,6 +1,9 @@
 import axios from 'axios';
-import api from './authInterceptor'; // Importing the authenticated API
-const API_BASE_URL = 'http://127.0.0.1:8000/store/products';
+import api from './authInterceptor'; 
+import {BASE_URL}  from './../ApiUrl';
+
+
+const API_BASE_URL = `${BASE_URL}/store/products`;
 
 // For GET requests, use axios directly
 export const getProducts = async (url) => {
@@ -65,7 +68,7 @@ export const deleteProduct = async (id) => {
 // Add Tag to Product
 export const addTagToProduct = async (productId, tag) => {
   try {
-    const response = await api.post(`http://127.0.0.1:8000/add-tag-to-product/${productId}/`, { tag });
+    const response = await api.post(`${BASE_URL}/add-tag-to-product/${productId}/`, { tag });
     return response.data;  // Return the response, which could be updated product info or confirmation
   } catch (error) {
     console.error("Error adding tag to product:", error);

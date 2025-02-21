@@ -22,7 +22,7 @@ import axios from "axios";
 import BuyerSidebar from "../../pages/BuyerSidebar";
 import Navbar from "../Navbar";
 import useAuthStore from "../../stores/authStore";
-
+import { BASE_URL } from "../../ApiUrl";
 const SellerSignup = () => {
   const [isLoading, setIsLoading] = useState(true);
   const userId = localStorage.getItem("vendorId");
@@ -51,7 +51,7 @@ const SellerSignup = () => {
           return;
         }
 
-        const { data } = await axios.get("http://127.0.0.1:8000/auth/users/me/", {
+        const { data } = await axios.get(`${BASE_URL}/auth/users/me/`, {
           headers: { Authorization: `JWT ${token}` },
         });
         
@@ -77,7 +77,7 @@ console.log("user",user)
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
       const sellerData = { ...values, user: userId };
-      await axios.post("http://127.0.0.1:8000/store/vendors/", sellerData);
+      await axios.post(`${BASE_URL}/store/vendors/`, sellerData);
       toast({
         title: `Welcome ${values.name}!`,
         description:

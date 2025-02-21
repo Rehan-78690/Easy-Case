@@ -27,7 +27,7 @@ import useCategoryStore from "../stores/CategoryStore";
 import axios from "axios";
 import debounce from "lodash.debounce";
 import LikeProduct from "./LikeProduct";
-
+import { BASE_URL } from "../ApiUrl";
 import ErrorImage from "./../assets/images/ImageError.jpg";
 function ProductListing({ vendorId }) {
   const { addToCartMutation } = useCart();
@@ -120,7 +120,7 @@ function ProductListing({ vendorId }) {
           ordering: sortBy,
         };
         const { data } = await axios.get(
-          `http://127.0.0.1:8000/store/products/`,
+          `${BASE_URL}/store/products/`,
           { params }
         );
         setProducts(data.results || []);
@@ -184,7 +184,7 @@ function ProductListing({ vendorId }) {
       };
 
       const { data } = await axios.get(
-        `http://127.0.0.1:8000/store/products/`,
+        `${BASE_URL}/store/products/`,
         { params }
       );
       setProducts(data.results || []);
@@ -418,14 +418,14 @@ function ProductListing({ vendorId }) {
                   justifyContent="center"
                 >
                   <Image
-                  src={ErrorImage}
-                  alt={product.title}
-                  width="100%"
-                  height="100%"
-                  objectFit="cover"
-                  transition="transform 0.3s"
-                  _hover={{ transform: "scale(1.05)" }}
-                />
+                    src={ErrorImage}
+                    alt={product.title}
+                    width="100%"
+                    height="100%"
+                    objectFit="cover"
+                    transition="transform 0.3s"
+                    _hover={{ transform: "scale(1.05)" }}
+                  />
                 </Box>
               )}
             </Box>

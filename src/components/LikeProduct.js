@@ -67,7 +67,7 @@ import { Icon } from '@chakra-ui/react';
 import { FaHeart } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import api from '../services/authInterceptor';
-
+import { BASE_URL } from '../ApiUrl';
 function LikeProduct({ productId }) {
     const [liked, setLiked] = useState(false);
 
@@ -76,7 +76,7 @@ function LikeProduct({ productId }) {
         const fetchLikedStatus = async () => {
             try {
                 // Fetch the user's wishlist by calling the API
-                const response = await api.get('http://127.0.0.1:8000/wishlist/');  // Assuming this returns the user's wishlist
+                const response = await api.get(`${BASE_URL}/wishlist/`);  // Assuming this returns the user's wishlist
                 const wishlist = response.data; // Array of products in the wishlist
 
                 // Check if the current productId is in the wishlist
@@ -95,7 +95,7 @@ function LikeProduct({ productId }) {
     // Handle like/unlike toggle by adding/removing from wishlist
     const handleLikeToggle = async () => {
         try {
-            const response = await api.post(`http://127.0.0.1:8000/like-product/${productId}/`);  // POST request to toggle like/unlike
+            const response = await api.post(`${BASE_URL}/like-product/${productId}/`);  // POST request to toggle like/unlike
             if (response?.data?.status === 'liked') {
                 setLiked(true);
                 toast.success('Product added to wishlist!');

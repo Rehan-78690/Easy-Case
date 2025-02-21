@@ -10,7 +10,7 @@ import useCartStore from '../stores/cartStore';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import LikeProduct from './LikeProduct';
-
+import { BASE_URL } from '../ApiUrl';
 import ErrorImage from './../assets/images/ImageError.jpg'
 
 function ProductListing({ vendorId,PageTtitle }) {
@@ -25,7 +25,7 @@ function ProductListing({ vendorId,PageTtitle }) {
         const fetchVendorProducts = async () => {
             if (vendorId) {
                 try {
-                    const { data } = await axios.get(`http://127.0.0.1:8000/store/vendors/${vendorId}/products/`);
+                    const { data } = await axios.get(`${BASE_URL}/store/vendors/${vendorId}/products/`);
                     setVendorProducts(data || []);
                 } catch (error) {
                     console.log('Failed to load vendor products.');

@@ -32,7 +32,7 @@ import {
 import AddProductModal from "./../Modals/AddProductModal";
 import { useNavigate } from "react-router-dom";
 import { ArrowBackIcon, SmallAddIcon } from "@chakra-ui/icons";
-
+import { BASE_URL } from "../../ApiUrl";
 const ManageInventory = () => {
   const navigate = useNavigate();
   const [inventoryItems, setInventoryItems] = useState([]);
@@ -65,7 +65,7 @@ const ManageInventory = () => {
   };
 
   useEffect(() => {
-    async function fetchData(url = "http://127.0.0.1:8000/store/products") {
+    async function fetchData(url = `${BASE_URL}/store/products`) {
       // Set the default URL
       try {
         const products = await getProducts(url); // Pass the URL to the function
@@ -83,7 +83,7 @@ const ManageInventory = () => {
 
   useEffect(() => {
     async function fetchCollections() {
-      const response = await fetch("http://127.0.0.1:8000/store/collections");
+      const response = await fetch(`${BASE_URL}/store/collections`);
       const data = await response.json();
       setCollections(data);
     }

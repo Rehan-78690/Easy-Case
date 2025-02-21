@@ -1,7 +1,9 @@
 import axios from 'axios';
 import api from './authInterceptor';  // For authenticated API calls
 import { toast } from 'react-toastify';
-const API_BASE_URL = 'http://127.0.0.1:8000';
+
+import {BASE_URL}  from './../ApiUrl';
+const API_BASE_URL = BASE_URL;
 
 // Create an order (for authenticated or guest users)
 // export const createOrder = async ({ cartId, userInfo = null }) => {

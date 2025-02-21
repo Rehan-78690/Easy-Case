@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Heading, Text, Button, VStack, HStack, Divider, Badge, Stack, Spinner } from '@chakra-ui/react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
+import {BASE_URL} from './../ApiUrl';
 const OrderConfirmation = () => {
     const { orderId } = useParams();  // Get the orderId from URL parameters
     const [orderDetails, setOrderDetails] = useState(null);
@@ -24,7 +24,7 @@ const OrderConfirmation = () => {
     // Fetch order details for authenticated users
     const fetchAuthenticatedOrderDetails = async (token) => {
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/store/orders/${orderId}/`, {
+            const response = await axios.get(`${BASE_URL}/store/orders/${orderId}/`, {
                 headers: { Authorization: `JWT ${token}` }
             });
             setOrderDetails(response.data);
@@ -40,7 +40,7 @@ const OrderConfirmation = () => {
     const fetchGuestOrderDetails = async () => {
         try {
             const guestEmail = localStorage.getItem('guestEmail');  // Assuming guest email is stored locally
-            const response = await axios.post('http://127.0.0.1:8000/store/guest-orders/', {
+            const response = await axios.post(`${BASE_URL}/store/guest-orders/`, {
                 order_id: orderId,
                 email: guestEmail
             });

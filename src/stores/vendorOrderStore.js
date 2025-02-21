@@ -3,7 +3,7 @@
 import { create } from 'zustand';
 import axios from 'axios';
 import api from '../services/authInterceptor';
-
+import {BASE_URL}  from './../ApiUrl';
 const useVendorOrderStore = create((set) => ({
     orders: [],
     loading: false,
@@ -12,7 +12,7 @@ const useVendorOrderStore = create((set) => ({
     fetchVendorOrders: async (token) => {
         set({ loading: true });
         try {
-            const response = await api.get('http://localhost:8000/store/vendor/orders/', {
+            const response = await api.get(`${BASE_URL}/store/vendor/orders/`, {
                
             });
             set({ orders: response.data, loading: false });
@@ -26,7 +26,7 @@ const useVendorOrderStore = create((set) => ({
     updateOrderStatus: async (orderId, status, token) => {
         try {
             await api.patch(
-                `http://localhost:8000/store/vendor/orders/${orderId}/update_status/`,
+                `${BASE_URL}/store/vendor/orders/${orderId}/update_status/`,
                 { status },
                 
             );

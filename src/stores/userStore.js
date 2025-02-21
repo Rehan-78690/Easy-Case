@@ -1,7 +1,7 @@
 // store/userStore.js
 import { create } from 'zustand';
 import api from '../services/authInterceptor';
-
+import {BASE_URL}  from './../ApiUrl';
 const useUserStore = create((set) => ({
     user: null,
     loading: false,
@@ -10,7 +10,7 @@ const useUserStore = create((set) => ({
     fetchUser: async (token) => {
         set({ loading: true });
         try {
-            const response = await api.get('http://localhost:8000/auth/users/me/', {
+            const response = await api.get(`${BASE_URL}/auth/users/me/`, {
                
             });
             set({ user: response.data, loading: false });
@@ -22,7 +22,7 @@ const useUserStore = create((set) => ({
 
     updateUser: async (token, updatedUserData) => {
         try {
-            await api.patch('http://localhost:8000/auth/users/me/', updatedUserData, {
+            await api.patch(`${BASE_URL}/auth/users/me/`, updatedUserData, {
                
             });
             set({ user: updatedUserData });

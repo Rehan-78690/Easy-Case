@@ -1,6 +1,6 @@
 import axios from 'axios';
-
-const API_BASE_URL = 'http://127.0.0.1:8000/store';
+import {BASE_URL} from './../ApiUrl';
+const API_BASE_URL = `${BASE_URL}/store`;
 
 // Initialize the cart by fetching or creating a new cart
 // export const initializeCart = async () => {

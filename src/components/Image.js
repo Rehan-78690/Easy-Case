@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import {BASE_URL} from './../ApiUrl';
 const ImageUpload = () => {
     const [image, setImage] = useState(null);
     const [message, setMessage] = useState('');
@@ -19,7 +19,7 @@ const ImageUpload = () => {
         formData.append('image', image);
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/store/products/648/images/', {
+            const response = await fetch(`${BASE_URL}/store/products/648/images/`, {
                 method: 'POST',
                 body: formData,
             });
