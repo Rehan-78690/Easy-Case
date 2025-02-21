@@ -24,6 +24,7 @@ import Navbar from "../Navbar";
 import useAuthStore from "../../stores/authStore";
 
 const SellerSignup = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const userId = localStorage.getItem("vendorId");
   const toast = useToast();
   const navigate = useNavigate();
@@ -44,25 +45,33 @@ const SellerSignup = () => {
     const fetchUserProfile = async () => {
       try {
         const token = localStorage.getItem("accessToken");
-
         if (!token) {
           console.error("No access token found.");
+          setIsLoading(false);
           return;
         }
 
-        const userProfileResponse = await axios.get("http://127.0.0.1:8000/auth/users/me/", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const { data } = await axios.get("http://127.0.0.1:8000/auth/users/me/", {
+          headers: { Authorization: `JWT ${token}` },
         });
-        setUser(userProfileResponse.data);
+        
+        // Verify backend response structure
+        console.log("User data from backend:", data); 
+        
+        setUser({
+          username: data.username,
+          email: data.email,
+          phone: data.phone || "", // Verify if phone exists in response
+        });
       } catch (error) {
-        console.error("Error fetching user profile:", error.response ? error.response.data : error);
+        console.error("Error fetching user profile:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
-
+console.log("user",user)
     fetchUserProfile();
-  }, []);
+  }, [userId]);
 
   // ✅ Handle form submission
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
@@ -136,6 +145,7 @@ const SellerSignup = () => {
 
           {/* Form */}
           <Formik
+            enableReinitialize
             initialValues={{
               name: user?.username ?? "",  
               email: user?.email ?? "",  
