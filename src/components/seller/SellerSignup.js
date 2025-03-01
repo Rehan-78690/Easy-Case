@@ -25,7 +25,7 @@ import useAuthStore from "../../stores/authStore";
 
 const SellerSignup = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const userId = localStorage.getItem("vendorId");
+
   const toast = useToast();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -59,6 +59,7 @@ const SellerSignup = () => {
         console.log("User data from backend:", data); 
         
         setUser({
+          user: data.id,
           username: data.username,
           email: data.email,
           phone: data.phone || "", // Verify if phone exists in response
@@ -71,12 +72,12 @@ const SellerSignup = () => {
     };
 console.log("user",user)
     fetchUserProfile();
-  }, [userId]);
+  }, []);
 
   // ✅ Handle form submission
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
-      const sellerData = { ...values, user: userId };
+      const sellerData = { ...values};
       await axios.post("http://127.0.0.1:8000/store/vendors/", sellerData);
       toast({
         title: `Welcome ${values.name}!`,
@@ -147,6 +148,7 @@ console.log("user",user)
           <Formik
             enableReinitialize
             initialValues={{
+              user: user?.user ?? "",
               name: user?.username ?? "",  
               email: user?.email ?? "",  
               phone: user?.phone ?? "",                
